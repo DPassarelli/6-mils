@@ -1,0 +1,60 @@
+{
+  "name": "6-mils",
+  "version": "1.0.0",
+  "description": "A JS library for sending, receiving, and parsing cXML messages.",
+  "main": "main.js",
+  "scripts": {
+    "lint": "standard",
+    "test:unit": "DEBUG=6-mils:* mocha",
+    "test:unit-cov": "nyc mocha",
+    "test": "DEBUG=off npm run lint && npm run test:unit-cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DPassarelli/6-mils.git"
+  },
+  "keywords": [
+    "cxml",
+    "xml",
+    "commerce"
+  ],
+  "author": "David Passarelli <dpassarelli@camelotcg.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DPassarelli/6-mils/issues"
+  },
+  "homepage": "https://github.com/DPassarelli/6-mils#readme",
+  "devDependencies": {
+    "@sindresorhus/is": "^2.1.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "coveralls": "^3.0.11",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0",
+    "standard": "^14.3.3"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "got": "^10.6.0",
+    "xml-js": "^1.6.11"
+  },
+  "mocha": {
+    "reporter": "min",
+    "require": "test/setup.js",
+    "spec": "lib/*.spec.js",
+    "ui": "bdd"
+  },
+  "standard": {
+    "global": [
+      "expect"
+    ]
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 92,
+    "statements": 92,
+    "functions": 92,
+    "branches": 92
+  }
+}
