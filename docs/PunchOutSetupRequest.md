@@ -1,0 +1,118 @@
+# PunchOutSetupRequest (POSReq)
+
+A PunchOutSetupRequest message must be transmitted to a supplier (or vendor) to initiate a PunchOut session. Instances of this class can be used to construct the necessary XML, send it to the supplier's e-commerce site, receive the XML response, and return the URL that the buyer should use to access the supplier's online catalog. 
+
+## General Notes
+
+The constructor and all methods for this type expect a single parameter that is a plain object. This documentation indicates the expected keys and the correct data type for the corresponding value. Optional keys are indicated by a `?` after the expected data type. If all of the keys are optional, then the parameter is as well (meaning, there is no need to pass an empty literal object).
+
+In this document, "Corresponding cXML Element" refers to the element that will be populated when the method is called. All of the indicated hierarchies are relative to the parent `<cXML>` element.
+
+
+## Constructor
+
+Each instance of `PunchOutSetupRequest` may be constructed without any arguments, e.g.:
+
+```
+const cxml = require('6-mils')
+const posreq = new cxml.PunchOutSetupRequest()
+```
+
+However, the following options are available:
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `payloadId` | {String?} | See below. |
+| `timestamp` | {String?} | If provided, this will be inserted into the `timestamp` attribute of the `<cXML>` (root) element. Otherwise, the current local date and time in ISO8601 format will be captured at the moment of instantiation. |
+| `buyerCookie` | {String?} | If provided, this will be inserted into the `<Request>` → `<PunchOutSetupRequest>` → `<BuyerCookie>` element. If empty or missing, a unique value will be automatically generated and returned from the `submit()` method. |
+
+**Notes for `payloadId`**
+
+An optional value to insert into the `payloadID` attribute of the `<cXML>` (root) element. According to the cXML documentation, this should be:
+
+> A unique number with respect to space and time, used for logging purposes to identify documents that might have been lost or had problems. This value should not change for retry attempts. The recommended implementation is: datetime.process id.random number@hostname
+
+If this value is empty or missing, one will be created automatically with the hostname `unknown`.
+
+If this value starts with `@`, then it will be used as the hostname. If it starts with any other printable character, then it will be used as the entire payload ID, after being escaped.
+
+_Examples:_
+
+| Value | Result |
+|-------|--------|
+| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `...<cXML payloadID="2000-01-01T00:00:00Z.3234.82372394812@unknown"...` |
+| `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `...<cXML payloadID="2000-01-01T00:00:00Z.3234.82372394812@example.com"...` |
+| `new PunchOutSetupRequest({ payloadId: '1970-01-01T00:00:00Z.12345.09876@example.com' })` | `...<cXML payloadID="1970-01-01T00:00:00Z.12345.09876@example.com"...` |
+| `new PunchOutSetupRequest({ payloadId: '"></cXML>some malicious content' })` | `...<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
+
+
+## Methods
+
+Nearly all methods are [chainable](https://en.wikipedia.org/wiki/Method_chaining), which means that they return `this`. This is indicated by a ⛓ immediately after the method name. Otherwise, the type of returned value is indicated.
+
+
+### `setBuyerInfo` ⛓
+
+Sets the credentials for the purchaser (generally, the organization that the POSReq is being sent from).
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `domain` | {String} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String} | The value to insert into the `<Identity>` element. |
+
+##### Corresponding cXML Element
+
+`<Header>` → `<From>`
+
+
+### `setSupplierInfo` ⛓
+
+Sets the credentials for the supplier (or vendor) that the POSReq is being sent to.
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `domain` | {String} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String} | The value to insert into the `<Identity>` element. |
+
+##### Corresponding cXML Element
+
+`<Header>` → `<To>`
+
+
+### `setSenderInfo` ⛓
+
+Sets the credentials for the sender, or, as the cXML documentation says, the "previous relaying entity".
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `domain` | {String} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String} | The value to insert into the `<Identity>` element. |
+| `secret` | {String} | The value to insert into the `<SharedSecret>` element. |
+| `ua` | {String?} | The value to insert into the `<UserAgent>` element. If not specified, the default value is the name and version number of this module. |
+
+##### Corresponding cXML Element
+
+`<Header>` → `<Sender>`
+
+
+### `submit` {Promise}
+
+This will initiate the transmission of the cXML message to the supplier, at the specified URI.
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `uri` | {String} | The address that the cXML message will be sent to, using the HTTP `POST` method. |
+
+ The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `PunchOutSetupResponse`. Please refer to the documentation for that object type for more information.
+
+**Note: the promise will only be rejected if there is a problem with the underlying HTTP transmission. The request itself may return a cXML failure code, but this can only be determined by checking the properties of the returned `PunchOutSetupResponse`.**
