@@ -19,7 +19,7 @@
     "commerce"
   ],
   "author": "David Passarelli <dpassarelli@camelotcg.com>",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/DPassarelli/6-mils/issues"
   },
