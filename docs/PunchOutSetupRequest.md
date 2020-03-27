@@ -72,8 +72,10 @@ Sets the credentials for the purchaser (generally, the organization that the POS
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `domain` | {String} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String} | The value to insert into the `<Identity>` element. |
+| `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` element. |
+
+**Note:** missing or `null` values will be converted into empty strings.
 
 ##### Corresponding cXML Element
 
@@ -88,8 +90,10 @@ Sets the credentials for the supplier (or vendor) that the POSReq is being sent 
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `domain` | {String} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String} | The value to insert into the `<Identity>` element. |
+| `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` element. |
+
+**Note:** missing or `null` values will be converted into empty strings.
 
 ##### Corresponding cXML Element
 
@@ -104,10 +108,12 @@ Sets the credentials for the sender, or, as the cXML documentation says, the "pr
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `domain` | {String} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String} | The value to insert into the `<Identity>` element. |
-| `secret` | {String} | The value to insert into the `<SharedSecret>` element. |
+| `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` element. |
+| `secret` | {String?} | The value to insert into the `<SharedSecret>` element. |
 | `ua` | {String?} | The value to insert into the `<UserAgent>` element. If not specified, the default value is the name and version number of this module. |
+
+**Note:** unless otherwise specified, missing or `null` values will be converted into empty strings.
 
 ##### Corresponding cXML Element
 
