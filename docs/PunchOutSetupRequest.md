@@ -36,15 +36,15 @@ An optional value to insert into the `payloadID` attribute of the `<cXML>` (root
 
 If this value is empty or missing, one will be created automatically with the hostname `unknown`.
 
-If this value starts with `@`, then it will be used as the hostname. If it starts with any other printable character, then it will be used as the entire payload ID, after being escaped.
+If this value starts with `@`, then that will be used as the hostname. If it starts with any other printable character, then it will be used as the entire payload ID, after being escaped.
 
 _Examples:_
 
 | Value | Result |
 |-------|--------|
-| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `...<cXML payloadID="2000-01-01T00:00:00Z.3234.82372394812@unknown"...` |
-| `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `...<cXML payloadID="2000-01-01T00:00:00Z.3234.82372394812@example.com"...` |
-| `new PunchOutSetupRequest({ payloadId: '1970-01-01T00:00:00Z.12345.09876@example.com' })` | `...<cXML payloadID="1970-01-01T00:00:00Z.12345.09876@example.com"...` |
+| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `...<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
+| `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `...<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
+| `new PunchOutSetupRequest({ payloadId: '12345.09876.foobar@example.com' })` | `...<cXML payloadID="12345.09876.foobar@example.com"...` |
 | `new PunchOutSetupRequest({ payloadId: '"></cXML>some malicious content' })` | `...<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
 
 
