@@ -8,6 +8,8 @@ The constructor and all methods for this type expect a single parameter that is 
 
 In this document, "Corresponding cXML Element" refers to the element that will be populated when the method is called. All of the indicated hierarchies are relative to the parent `<cXML>` element.
 
+All character data will be escaped before being inserted into the underlying XML.
+
 
 ## Constructor
 
@@ -36,7 +38,7 @@ An optional value to insert into the `payloadID` attribute of the `<cXML>` (root
 
 If this value is empty or missing, one will be created automatically with the hostname `unknown`.
 
-If this value starts with `@`, then that will be used as the hostname. If it starts with any other printable character, then it will be used as the entire payload ID, after being escaped.
+If this value starts with `@`, then that will be used as the hostname. If it starts with any other printable character, then it will be used as the entire payload ID.
 
 _Examples:_
 
