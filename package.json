@@ -36,8 +36,8 @@
     "debug": "^4.1.1",
     "got": "^10.6.0",
     "lodash.merge": "^4.6.2",
-    "ulid": "^2.3.0",
-    "xml-js": "^1.6.11"
+    "nunjucks": "^3.2.1",
+    "ulid": "^2.3.0"
   },
   "mocha": {
     "reporter": "min",

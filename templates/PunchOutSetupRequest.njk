@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/{{ CXML_VERSION }}/cXML.dtd">
+<cXML xml:lang="en-US" payloadID="{{ payloadId }}" timestamp="{{ timestamp }}">
+  <Header>
+    <From>
+      <Credential domain="{{ from.domain }}">
+        <Identity>{{ from.id }}</Identity>
+      </Credential>
+    </From>
+    <To>
+      <Credential domain="{{ to.domain }}">
+        <Identity>{{ to.id }}</Identity>
+      </Credential>
+    </To>
+    <Sender>
+      <Credential domain="{{ sender.domain }}">
+        <Identity>{{ sender.id }}</Identity>
+        <SharedSecret>{{ sender.secret }}</SharedSecret>
+      </Credential>
+      <UserAgent>{{ sender.ua }}</UserAgent>
+    </Sender>
+  </Header>
+  <Request>
+    <PunchOutSetupRequest operation="{{ action }}">
+      <BuyerCookie>{{ buyerCookie }}</BuyerCookie>
+      <BrowserFormPost>
+        <URL>{{ postback }}</URL>
+      </BrowserFormPost>
+    </PunchOutSetupRequest>
+  </Request>
+</cXML>
