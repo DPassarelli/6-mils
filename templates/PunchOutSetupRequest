@@ -23,6 +23,9 @@
   <Request>
     <PunchOutSetupRequest operation="{{ action }}">
       <BuyerCookie>{{ buyerCookie }}</BuyerCookie>
+      {% for name, value in extrinsics %}
+      <Extrinsic name="{{ name }}">{{ value }}</Extrinsic>
+      {% endfor %}
       <BrowserFormPost>
         <URL>{{ postback }}</URL>
       </BrowserFormPost>

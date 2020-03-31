@@ -35,6 +35,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "got": "^10.6.0",
+    "is-plain-obj": "^2.1.0",
     "lodash.merge": "^4.6.2",
     "nunjucks": "^3.2.1",
     "ulid": "^2.3.0"

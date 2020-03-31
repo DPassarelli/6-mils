@@ -4,11 +4,9 @@ A PunchOutSetupRequest message must be transmitted to a supplier (or vendor) to 
 
 ## General Notes
 
-The constructor and all methods for this type expect a single parameter that is a plain object. This documentation indicates the expected keys and the correct data type for the corresponding value. Optional keys are indicated by a `?` after the expected data type. If all of the keys are optional, then the parameter is as well (meaning, there is no need to pass an empty literal object).
+Optional values are indicated by a `?` after the expected data type. If all of the keys are optional, then the parameter is as well (meaning, there is no need to pass an empty literal object).
 
 In this document, "Corresponding cXML Element" refers to the element that will be populated when the method is called. All of the indicated hierarchies are relative to the parent `<cXML>` element.
-
-All character data will be escaped before being inserted into the underlying XML.
 
 
 ## Constructor
@@ -20,7 +18,12 @@ const cxml = require('6-mils')
 const posreq = new cxml.PunchOutSetupRequest()
 ```
 
-However, the following options are available:
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
+
 
 ##### Options
 
@@ -41,8 +44,8 @@ If this value starts with `@`, then that will be used as the hostname. If it sta
 
 _Examples:_
 
-| Value | Result |
-|-------|--------|
+| Sample | Result |
+|--------|--------|
 | `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `...<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
 | `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `...<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
 | `new PunchOutSetupRequest({ payloadId: '12345.09876.foobar@example.com' })` | `...<cXML payloadID="12345.09876.foobar@example.com"...` |
@@ -56,7 +59,13 @@ Nearly all methods are [chainable](https://en.wikipedia.org/wiki/Method_chaining
 
 ### `toString` {String}
 
-This method returns the raw cXML of the underlying POSReq message.
+This method returns the raw cXML of the underlying POSReq message. User-provided values containing control characters will be escaped.
+
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
 ##### Options
 
@@ -69,6 +78,12 @@ This method returns the raw cXML of the underlying POSReq message.
 
 Sets the credentials for the purchaser (generally, the organization that the POSReq is being sent from).
 
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
+
 ##### Options
 
 | Key | Type | Notes |
@@ -80,13 +95,19 @@ Sets the credentials for the purchaser (generally, the organization that the POS
 
 ##### Corresponding cXML Element
 
-`<Header>` → `<From>`
+ `<cXML>` → `<Header>` → `<From>`
 
 
 ### `setSupplierInfo` ⛓
 
 Sets the credentials for the supplier (or vendor) that the POSReq is being sent to.
 
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
+
 ##### Options
 
 | Key | Type | Notes |
@@ -98,12 +119,18 @@ Sets the credentials for the supplier (or vendor) that the POSReq is being sent 
 
 ##### Corresponding cXML Element
 
-`<Header>` → `<To>`
+ `<cXML>` → `<Header>` → `<To>`
 
 
 ### `setSenderInfo` ⛓
 
 Sets the credentials for the sending entity (either `6-mils` or a network relay).
+
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
 ##### Options
 
@@ -118,18 +145,48 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 ##### Corresponding cXML Element
 
-`<Header>` → `<Sender>`
+ `<cXML>` → `<Header>` → `<Sender>`
+
+
+### `setPostbackUrl` ⛓
+
+Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the address that the buyer's web browser will be directed to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
+
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `uri` | {String} | A valid URL. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BrowserFormPost>` → `<URL>`
+
+
+### `setExtrinsic`  ⛓
+
+Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave it as an empty object) in order to clear the collection.
+
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `dict` | {Object?} | A plain object, which maps to the names and values of the extrinsic elements. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<Extrinsic>`
 
 
 ### `submit` {Promise}
 
 This will initiate the transmission of the cXML message to the supplier, at the specified URI.
 
-##### Options
+##### Parameters
 
-| Key | Type | Notes |
-|-----|------|-------|
-| `uri` | {String} | The address that the cXML message will be sent to, using the HTTP `POST` method. |
+| Name | Type | Notes |
+|------|------|-------|
+| `uri` | {String} | A valid URL. |
 
  The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `PunchOutSetupResponse`. Please refer to the documentation for that object type for more information.
 
