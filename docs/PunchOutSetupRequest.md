@@ -56,7 +56,7 @@ Nearly all methods are [chainable](https://en.wikipedia.org/wiki/Method_chaining
 
 ### `toString` {String}
 
-This method returns the raw cXML of the underlying PunchOutSetupRequest message.
+This method returns the raw cXML of the underlying POSReq message.
 
 ##### Options
 
@@ -103,7 +103,7 @@ Sets the credentials for the supplier (or vendor) that the POSReq is being sent 
 
 ### `setSenderInfo` ⛓
 
-Sets the credentials for the sender, or, as the cXML documentation says, the "previous relaying entity".
+Sets the credentials for the sending entity (either `6-mils` or a network relay).
 
 ##### Options
 
