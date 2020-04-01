@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/1.2.014/cXML.dtd">
+<cXML xml:lang="en-US" payloadID="933694607739" timestamp="2002-08-15T08:46:00-07:00">
+  <Response>
+    <Status code="400" text="Failure">XML document contained a doctype but failed validation.</Status>
+  </Response>
+</cXML>
