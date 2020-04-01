@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 * Logic to decipher `PunchOutSetupResponse` messages that indicate failure.
+* Documentation updates.
 
 ## [0.2.1] - 2020-03-01
 
