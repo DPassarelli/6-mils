@@ -4,10 +4,10 @@
   "description": "A JS library for sending, receiving, and parsing cXML messages.",
   "main": "main.js",
   "scripts": {
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "standard",
     "test:unit": "DEBUG=6-mils:* mocha",
-    "test:unit-cov": "nyc mocha",
-    "test": "DEBUG=off npm run lint && npm run test:unit-cov"
+    "test": "DEBUG=off npm run lint && nyc mocha"
   },
   "repository": {
     "type": "git",

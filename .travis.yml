@@ -9,7 +9,7 @@ install:
   - npm install
 
 after_success:
-  - npm test
+  - npm run coverage
 
 # Send coverage data to Coveralls
 after_script:
