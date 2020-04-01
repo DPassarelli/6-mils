@@ -156,7 +156,7 @@ Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the addre
 
 | Name | Type | Notes |
 |------|------|-------|
-| `uri` | {String} | A valid URL. |
+| `url` | {String} | A valid URL that the user will be redirected to after completing the PunchOut session. |
 
 ##### Corresponding cXML Element
 
@@ -180,13 +180,13 @@ Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave 
 
 ### `submit` {Promise}
 
-This will initiate the transmission of the cXML message to the supplier, at the specified URI.
+This will initiate the transmission of the cXML message to the supplier, at the specified URL.
 
 ##### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
-| `uri` | {String} | A valid URL. |
+| `url` | {String} | A valid URL that can receive the POSReq. |
 
  The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `PunchOutSetupResponse`. Please refer to the documentation for that object type for more information.
 
