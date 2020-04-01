@@ -27,10 +27,6 @@ cXML is used to transmit information between the computer systems of purchasers 
 
 In cXML, a "punch out" means automating the process of accessing a supplier's online catalog. Typically, the catalog will be customized in such a way that it only shows the products, services, and prices that are specific to the supplier's arrangement with the purchaser. 
 
-### Notes
-
-1: Typically, when 
-
 
 ## License
 
