@@ -97,6 +97,7 @@ Returns a dictionary with the following keys:
 | Name | Type | Notes |
 |------|------|-------|
 | `cost` | {Number} | The total cost of the entire order. Taken from `<PunchOutOrderMessageHeader>` → `<Total>` → `<Money>`. |
+| `currency` | {String} | The value of the `currency` attribute in the `<PunchOutOrderMessageHeader>` → `<Total>` → `<Money>` element. If there are no items in the order, then this will be an empty string. |
 | `items` | {Number} | The number of items in the order. This value will always be the same as `items.length`. |
 | `units` | {Number} | The total number of all units for all items in the order. |
 
