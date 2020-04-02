@@ -1,4 +1,4 @@
-# PunchOutOrderMessage (POOM)
+# PunchOutOrderMessage
 
 A PunchOutOrderMessage message is received back from the supplier once the buyer has completed shopping in a PunchOut session. Instances of this class can be used to parse the received cXML, and make the data available as native JavaScript types. 
 
@@ -103,4 +103,4 @@ Returns a dictionary with the following keys:
 
 ### `version` {String}
 
-The version of the cXML protocol used to generate the POOM. This is extracted from the referenced DTD. Read-only.
+The version of the cXML protocol used to generate the PunchOutOrderMessage. This is extracted from the referenced DTD. Read-only.
