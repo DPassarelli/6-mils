@@ -161,7 +161,7 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 ### `setPostbackUrl` ⛓
 
-Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the address that the buyer's web browser will be directed to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
+Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the address that the buyer's web browser (along with the shopping cart data) will be redirected to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
 
 ##### Parameters
 
