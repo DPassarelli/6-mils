@@ -68,23 +68,6 @@ Returns the value that will be used in the `payloadID` attribute of the `<cXML>`
 Nearly all methods are [chainable](https://en.wikipedia.org/wiki/Method_chaining), which means that they return `this`. This is indicated by a ⛓ immediately after the method name. Otherwise, the type of returned value is indicated.
 
 
-### `toString` {String}
-
-This method returns the raw cXML of the underlying POSReq message. User-provided values containing control characters will be escaped.
-
-##### Parameters
-
-| Name | Type | Notes |
-|------|------|-------|
-| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
-
-##### Options
-
-| Key | Type | Notes |
-|-----|------|-------|
-| `format` | {Boolean?} | If `true`, then the cXML will be formatted with line breaks and indentation to make it human-readable. |
-
-
 ### `setBuyerInfo` ⛓
 
 Sets the credentials for the purchaser (generally, the organization that the POSReq is being sent from).
@@ -106,31 +89,37 @@ Sets the credentials for the purchaser (generally, the organization that the POS
 
 ##### Corresponding cXML Element
 
- `<cXML>` → `<Header>` → `<From>`
+`<cXML>` → `<Header>` → `<From>`
 
 
-### `setSupplierInfo` ⛓
+### `setExtrinsic`  ⛓
 
-Sets the credentials for the supplier (or vendor) that the POSReq is being sent to.
+Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave it as an empty object) in order to clear the collection.
 
 ##### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
-| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
-
-##### Options
-
-| Key | Type | Notes |
-|-----|------|-------|
-| `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String?} | The value to insert into the `<Identity>` element. |
-
-**Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
+| `dict` | {Object?} | A plain object, which maps to the names and values of the extrinsic elements. |
 
 ##### Corresponding cXML Element
 
- `<cXML>` → `<Header>` → `<To>`
+`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<Extrinsic>`
+
+
+### `setPostbackUrl` ⛓
+
+Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the address that the buyer's web browser (along with the shopping cart data) will be redirected to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
+
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `url` | {String} | A valid URL that the user will be redirected to after completing the PunchOut session. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BrowserFormPost>` → `<URL>`
 
 
 ### `setSenderInfo` ⛓
@@ -156,37 +145,31 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 ##### Corresponding cXML Element
 
- `<cXML>` → `<Header>` → `<Sender>`
+`<cXML>` → `<Header>` → `<Sender>`
 
 
-### `setPostbackUrl` ⛓
+### `setSupplierInfo` ⛓
 
-Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the address that the buyer's web browser (along with the shopping cart data) will be redirected to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
-
-##### Parameters
-
-| Name | Type | Notes |
-|------|------|-------|
-| `url` | {String} | A valid URL that the user will be redirected to after completing the PunchOut session. |
-
-##### Corresponding cXML Element
-
-`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BrowserFormPost>` → `<URL>`
-
-
-### `setExtrinsic`  ⛓
-
-Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave it as an empty object) in order to clear the collection.
+Sets the credentials for the supplier (or vendor) that the POSReq is being sent to.
 
 ##### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
-| `dict` | {Object?} | A plain object, which maps to the names and values of the extrinsic elements. |
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` element. |
+
+**Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
 
 ##### Corresponding cXML Element
 
-`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<Extrinsic>`
+`<cXML>` → `<Header>` → `<To>`
 
 
 ### `submit` {Promise}
@@ -202,3 +185,20 @@ This will initiate the transmission of the cXML message to the supplier, at the 
  The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `PunchOutSetupResponse`. Please refer to the documentation for that object type for more information.
 
 **Note: the promise will only be rejected if there is a problem with the underlying HTTP transmission. The request itself may return a cXML failure code, but this can only be determined by checking the properties of the returned `PunchOutSetupResponse`.**
+
+
+### `toString` {String}
+
+This method returns the raw cXML of the underlying POSReq message. User-provided values containing control characters will be escaped.
+
+##### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object?} | A plain object, with one or more of the keys listed below. |
+
+##### Options
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `format` | {Boolean?} | If `true`, then the cXML will be formatted with line breaks and indentation to make it human-readable. |
