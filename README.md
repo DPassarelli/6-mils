@@ -22,10 +22,14 @@ This class is used to create and send a request to initiate a new Punch Out sess
 
 This class is used to parse incoming `PunchOutOrderMessage` cXML documents.
 
+### Examples
+
+Please refer to the contents of `test/functional/` for examples of this library in use.
+
 
 ## Technical Documentation
 
-Please refer to the `docs/` sub-folder. There are separate pages for each object in this library.
+Please refer to the `docs/` sub-folder. There are separate entries for each object in this library.
 
 
 ## cXML Concepts

@@ -6,7 +6,7 @@ A PunchOutSetupRequest message must be transmitted to a supplier (or vendor) to 
 
 Optional values are indicated by a `?` after the expected data type. If all of the keys are optional, then the parameter is as well (meaning, there is no need to pass an empty literal object).
 
-In this document, "Corresponding cXML Element" refers to the element that will be populated when the method is called. All of the indicated hierarchies start at the root `<cXML>` element.
+In this document, "Corresponding cXML Element" refers to the element that is referenced when the method or property is called. All of the indicated hierarchies start at the root `<cXML>` element.
 
 
 ## Constructor
@@ -44,23 +44,32 @@ If this value starts with `@`, then that will be used as the hostname. If it sta
 
 _Examples:_
 
-| Sample | Result |
-|--------|--------|
-| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `...<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
-| `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `...<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
-| `new PunchOutSetupRequest({ payloadId: '12345.09876.foobar@example.com' })` | `...<cXML payloadID="12345.09876.foobar@example.com"...` |
-| `new PunchOutSetupRequest({ payloadId: '"></cXML>some malicious content' })` | `...<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
+| Code excerpt | Generated XML |
+|--------------|---------------|
+| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
+| `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
+| `new PunchOutSetupRequest({ payloadId: '12345.09876.foobar@example.com' })` | `<cXML payloadID="12345.09876.foobar@example.com"...` |
+| `new PunchOutSetupRequest({ payloadId: '"></cXML>some malicious content' })` | `<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
 
 
 ## Properties
 
 ### `buyerCookie` {String}
 
-Returns the value that will be used in the `<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BuyerCookie>` element. Read-only.
+The unique identifier for this PunchOut session. This value will be used later on by the supplier when sending back the corresponding PunchOutOrderMessage. Read-only.
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BuyerCookie>`
+
 
 ### `payloadId` {String}
 
-Returns the value that will be used in the `payloadID` attribute of the `<cXML>` (root) element. Read-only.
+The unique identifier for this cXML message. Read-only.
+
+##### Corresponding cXML Element
+
+`<cXML>` (`payloadID` attribute)
 
 
 ## Methods
@@ -70,7 +79,7 @@ Nearly all methods are [chainable](https://en.wikipedia.org/wiki/Method_chaining
 
 ### `setBuyerInfo` ⛓
 
-Sets the credentials for the purchaser (generally, the organization that the POSReq is being sent from).
+Sets the credentials for the purchaser's organization (the one that the POSReq is being sent from).
 
 ##### Parameters
 
@@ -83,7 +92,7 @@ Sets the credentials for the purchaser (generally, the organization that the POS
 | Key | Type | Notes |
 |-----|------|-------|
 | `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String?} | The value to insert into the `<Identity>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` child element. |
 
 **Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
 
@@ -100,7 +109,13 @@ Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave 
 
 | Name | Type | Notes |
 |------|------|-------|
-| `dict` | {Object?} | A plain object, which maps to the names and values of the extrinsic elements. |
+| `dict` | {Object?} | A plain object. For each key, a separate `<Extrinsic>` element will be created, with the name of the key put into the `name` attribute, and the value put into the text of the element itself. |
+
+_Example:_
+
+| Code excerpt | Generated XML |
+|--------------|---------------|
+| `setExtrinsic({ first: 'John', last: 'Doe' })` | `<Extrinsic name="first">John</Extrinsic><Extrinsic name="last">Doe</Extrinsic>` |
 
 ##### Corresponding cXML Element
 
@@ -109,7 +124,7 @@ Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave 
 
 ### `setPostbackUrl` ⛓
 
-Sets the value of the `<BrowserFormPost>` → `<URL>` element. This is the address that the buyer's web browser (along with the shopping cart data) will be redirected to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
+Sets the address that the buyer's web browser (along with the shopping cart data) will be redirected to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
 
 ##### Parameters
 
@@ -137,7 +152,7 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 | Key | Type | Notes |
 |-----|------|-------|
 | `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String?} | The value to insert into the `<Identity>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` child element. |
 | `secret` | {String?} | The value to insert into the `<SharedSecret>` element. |
 | `ua` | {String?} | The value to insert into the `<UserAgent>` element. If not specified, the default value is the name and version number of this module. |
 
@@ -150,7 +165,7 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 ### `setSupplierInfo` ⛓
 
-Sets the credentials for the supplier (or vendor) that the POSReq is being sent to.
+Sets the credentials for the supplier's organization (the one that the POSReq is being sent to).
 
 ##### Parameters
 
@@ -163,7 +178,7 @@ Sets the credentials for the supplier (or vendor) that the POSReq is being sent 
 | Key | Type | Notes |
 |-----|------|-------|
 | `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
-| `id` | {String?} | The value to insert into the `<Identity>` element. |
+| `id` | {String?} | The value to insert into the `<Identity>` child element. |
 
 **Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
 
@@ -174,7 +189,7 @@ Sets the credentials for the supplier (or vendor) that the POSReq is being sent 
 
 ### `submit` {Promise}
 
-This will initiate the transmission of the cXML message to the supplier, at the specified URL.
+Initiates the transmission of the PunchOutSetupRequest message to the supplier, at the specified URL.
 
 ##### Parameters
 
@@ -184,12 +199,12 @@ This will initiate the transmission of the cXML message to the supplier, at the 
 
  The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `PunchOutSetupResponse`. Please refer to the documentation for that object type for more information.
 
-**Note: the promise will only be rejected if there is a problem with the underlying HTTP transmission. The request itself may return a cXML failure code, but this can only be determined by checking the properties of the returned `PunchOutSetupResponse`.**
+**Note: the promise will only be rejected if there is a problem with the underlying HTTP transmission. The supplier may return a cXML message that indicates an error with the POSReq, or with their system, but this can only be determined by checking the properties of the returned `PunchOutSetupResponse`.**
 
 
 ### `toString` {String}
 
-This method returns the raw cXML of the underlying POSReq message. User-provided values containing control characters will be escaped.
+Returns the raw cXML of the underlying POSReq message. User-provided values containing control characters will be escaped.
 
 ##### Parameters
 

@@ -19,32 +19,40 @@ Each instance of `PunchOutOrderMessage` must be constructed with a single argume
 
 ### `buyerCookie` {String}
 
-Returns the contents of the `<cXML>` → `<Message>` → `<PunchOutOrderMessage>` → `<BuyerCookie>` element. Read-only.
+The unique identifier for this PunchOut session. This value is used to correlate this PunchOutOrderMessage with the initiating PunchOutSetupRequest. Read-only.
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Message>` → `<PunchOutOrderMessage>` → `<BuyerCookie>`
 
 
-### `from` {Object}
+### `buyerInfo` {Object}
 
-Returns a dictionary containing the following keys:
+The credentials of the purchaser's organization (the one that the PunchOutOrderMessage is being sent to). Returns a dictionary containing the following keys:
 
 | Name | Type | Notes |
 |------|------|-------|
-| `domain` | {String} | The value of the `domain` attribute in the `<cXML>` → `<Header>` → `<From>` → `<Credential>` element. |
-| `id` | {String} | The contents of the `<cXML>` → `<Header>` → `<From>` → `<Credential>` → `<Identity>` element. |
+| `domain` | {String} | The value of the `domain` attribute in the `<Credential>` element. |
+| `id` | {String} | The contents of the `<Identity>` child element. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Header>` → `<To>`
 
 
 ### `items` {Array}
 
-Returns a list of all the items in the shopping cart (see note below). Each entry is a dictionary containing the following keys:
+The list of all the items that were in the buyer's shopping cart when they "checked out" from the supplier's PunchOut site (see note below). Each entry is a dictionary containing the following keys:
 
 | Name | Type | Notes |
 |------|------|-------|
 | `classification` | {Object} | See notes below. |
 | `currency` | {String} | The ISO 4217 currency code for `unitPrice`. |
-| `description` | {String} | The contents of the `<ItemIn>` → `<ItemDetail>` → `<Description>` element (not including any `<ShortName>` child element, if present. |
+| `description` | {String} | The contents of the `<ItemIn>` → `<ItemDetail>` → `<Description>` child element (not including any `<ShortName>` child element, if present. |
 | `name` | {String} | If the `<Description>` element contains a `<ShortName>` child, this will contain the value of that child element. Otherwise, it will be the same value as `description`. |
 | `quantity` | {Number} | The number of units ordered. |
 | `supplierPartId` | {String} | The supplier's part ID for this item. |
-| `supplierPartAuxId` | {String} | An additional identifier that may be used by the supplier to encode a custom configuration for this item. If the `<SupplierPartAuxiliaryID>` element is missing, then this will be an empty string. |
+| `supplierPartAuxId` | {String} | An additional identifier that may be used by the supplier to encode a custom configuration for this item. If the `<SupplierPartAuxiliaryID>` child element is missing, then this will be an empty string. |
 | `unitPrice` | {Number} | The price for each unit of this item. |
 | `uom` | {String} | The unit of measure for this item, according to the [UN/CEFACT Unit of Measure Common Codes](https://www.unece.org/cefact/codesfortrade/codes_index.html). |
 
@@ -58,48 +66,72 @@ If the `<ItemIn>` element contains one or more `<Classification>` child elements
 
 If the PunchOut session is ended with nothing in the buyer's shopping cart, then this list will be empty (`items.length === 0`).
 
+##### Corresponding cXML Element
+
+`<cXML>` → `<Message>` → `<PunchOutOrderMessage>` → `<ItemIn>`
+
 
 ### `payloadId` {String}
 
-Returns the value of the `payloadID` attribute of the `<cXML>` (root) element. Read-only.
+The unique identifier for this cXML message. Read-only.
+
+##### Corresponding cXML Element
+
+`<cXML>` (`payloadID` attribute)
 
 
-### `sender` {Object}
+### `senderInfo` {Object}
 
-Returns a dictionary containing the following keys:
+The credentials for the sending entity. Returns a dictionary containing the following keys:
 
 | Name | Type | Notes |
 |------|------|-------|
-| `domain` | {String} | The value of the `domain` attribute in the `<cXML>` → `<Header>` → `<Sender>` → `<Credential>` element. |
-| `id` | {String} | The contents of the `<cXML>` → `<Header>` → `<Sender>` → `<Credential>` → `<Identity>` element. |
-| `ua` | {String} | The contents of the `<cXML>` → `<Header>` → `<Sender>` → `<UserAgent>` element. |
+| `domain` | {String} | The value of the `domain` attribute in the `<Credential>` element. |
+| `id` | {String} | The contents of the `<Identity>` child element. |
+| `ua` | {String} | The contents of the `<UserAgent>` element. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Header>` → `<Sender>`
+
+
+### `supplierInfo` {Object}
+
+The credentials of the supplier's organization (the one that the PunchOutOrderMessage is being sent from). Returns a dictionary containing the following keys:
+
+| Name | Type | Notes |
+|------|------|-------|
+| `domain` | {String} | The value of the `domain` attribute in the `<Credential>` element. |
+| `id` | {String} | The contents of the `<Identity>` child element. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Header>` → `<From>`
 
 
 ### `timestamp` {String}
 
-Returns the value of the `timestamp` attribute of the `<cXML>` (root) element. Read-only.
+The date and time of the cXML transmission, which is expected to be in [ISO 8601 format](https://www.w3.org/TR/NOTE-datetime). Read-only.
 
+##### Corresponding cXML Element
 
-### `to` {Object}
-
-Returns a dictionary containing the following keys:
-
-| Name | Type | Notes |
-|------|------|-------|
-| `domain` | {String} | The value of the `domain` attribute in the `<cXML>` → `<Header>` → `<To>` → `<Credential>` element. |
-| `id` | {String} | The contents of the `<cXML>` → `<Header>` → `<To>` → `<Credential>` → `<Identity>` element. |
+`<cXML>` (`timestamp` attribute)
 
 
 ### `total` {Object}
 
-Returns a dictionary with the following keys:
+The total amount (of units and costs) from the shopping cart. Returns a dictionary with the following keys:
 
 | Name | Type | Notes |
 |------|------|-------|
-| `cost` | {Number} | The total cost of the entire order. Taken from `<PunchOutOrderMessageHeader>` → `<Total>` → `<Money>`. |
-| `currency` | {String} | The value of the `currency` attribute in the `<PunchOutOrderMessageHeader>` → `<Total>` → `<Money>` element. If there are no items in the order, then this will be an empty string. |
+| `cost` | {Number} | The total cost of the entire order (based on the value in the `<Money>` element, not calculated from the entries in `items`). |
+| `currency` | {String} | The value of the `currency` attribute in the `<Money>` element. If there are no items in the order, then this will be an empty string. |
 | `items` | {Number} | The number of items in the order. This value will always be the same as `items.length`. |
 | `units` | {Number} | The total number of all units for all items in the order. |
+
+##### Corresponding cXML Element
+
+`<cXML>` → `<Message>` → `<PunchOutOrderMessageHeader>` → `<Total>` → `<Money>`
 
 
 ### `version` {String}
