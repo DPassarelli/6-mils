@@ -9,9 +9,24 @@ const path = require('path')
  */
 const cxml = require('../../main.js')
 
+/**
+ * A list of all requests captured by `nock`. This will allow the test to
+ * include assertions against the request in addition to the response.
+ * @type {Array}
+ */
+const requests = []
+
+/**
+ * Which outgoing HTTP requests that will be intercepted. This is needed to
+ * hook into the `request` event, which allows the intercepted request to be
+ * captured for further analysis.
+ * @type {Object}
+ */
+let scope = null
+
 describe('the PunchOut Request/Response cycle', function () {
   before(function () {
-    nock('http://cxml.org')
+    scope = nock('http://cxml.org')
       .post('/posr/success')
       .replyWithFile(
         200,
@@ -21,6 +36,10 @@ describe('the PunchOut Request/Response cycle', function () {
         }
       )
       .persist()
+
+    scope.on('request', (request, interceptor, body) => {
+      requests.push(body)
+    })
   })
 
   after(function () {
@@ -38,22 +57,23 @@ describe('the PunchOut Request/Response cycle', function () {
       .submit('http://cxml.org/posr/success')
       .then(function (response) {
         /**
-         * Status
+         * Verify that the response contains the correct status code and text.
          */
         expect(response.statusCode).to.equal('200')
         expect(response.statusText).to.equal('success')
 
         /**
-         * Timestamp
+         * Verify that the original request has the correct timestamp.
          */
-        // const now = new Date()
-        // const timestamp = new Date(response.timestamp)
-        // const diffInMilliseconds = now.getTime() - timestamp.getTime()
+        const requestBody = requests.pop()
+        const timestamp = new Date(/timestamp="[^"]+/.exec(requestBody)[0].substring(11))
+        const now = new Date()
+        const diffInMilliseconds = now.getTime() - timestamp.getTime()
 
-        // expect(diffInMilliseconds).to.be.lessThan(5)
+        expect(diffInMilliseconds).to.be.lessThan(1000)
 
         /**
-         * URL
+         * Verify that the response contains the correct URL to redirect to.
          */
         expect(response.url).to.equal('http://xml.workchairs.com/retrieve?reqUrl=20626;Initial=TRUE')
       })
