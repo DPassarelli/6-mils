@@ -43,6 +43,7 @@
     "moment": "^2.24.0",
     "nunjucks": "^3.2.1",
     "ulid": "^2.3.0",
+    "whatwg-url": "^7.1.0",
     "xml-js": "^1.6.11"
   },
   "mocha": {
