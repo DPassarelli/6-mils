@@ -6,7 +6,7 @@
   "scripts": {
     "cover:test": "nyc --silent npm run test:unit && nyc --no-clean npm run test:func",
     "cover:report": "nyc report --reporter=text-lcov",
-    "cover": "npm run cover:test && npm run cover:report | coveralls",
+    "coverage": "npm run cover:test && npm run cover:report | coveralls",
     "lint": "standard",
     "test:unit": "DEBUG=6-mils:* mocha --recursive *.spec.js **/*.spec.js",
     "test:func": "DEBUG=6-mils:* mocha test/functional/*",
