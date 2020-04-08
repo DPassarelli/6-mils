@@ -6,8 +6,9 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "standard",
-    "test:unit": "DEBUG=6-mils:* mocha",
-    "test": "DEBUG=off npm run lint && nyc mocha --spec test/functional/*"
+    "test:unit": "DEBUG=6-mils:* mocha --recursive --spec **/*.spec.js",
+    "test:func": "DEBUG=6-mils:* mocha --spec test/functional/*",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,6 @@
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.11",
     "mocha": "^7.1.1",
-    "nock": "^12.0.3",
     "nyc": "^15.0.0",
     "standard": "^14.3.3"
   },
@@ -47,8 +47,6 @@
     "reporter": "min",
     "exclude": "node_modules/**/*.spec.js",
     "file": "test/setup.js",
-    "recursive": true,
-    "spec": "**/*.spec.js",
     "ui": "bdd"
   },
   "standard": {
