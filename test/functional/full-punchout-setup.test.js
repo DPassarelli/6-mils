@@ -11,7 +11,22 @@ const path = require('path')
  */
 const cxml = require('../../main.js')
 
-let server = null
+/**
+ * The contents of a successful cXML response.
+ * @type {String}
+ */
+const POSR_CONTENT = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-200.xml')).toString()
+
+/**
+ * A local HTTP server that will respond to PunchOutSetupRequests.
+ * @type {Object}
+ */
+let localHttpServer = null
+
+/**
+ * The system-assigned port that the local HTTP server will be listening on.
+ * @type {Number}
+ */
 let ASSIGNED_PORT = 0
 
 /**
@@ -20,27 +35,47 @@ let ASSIGNED_PORT = 0
  */
 const requests = []
 
+/**
+ * TEST SETUP
+ */
 before(function () {
-  server = http.createServer((req, res) => {
-    switch (req.url) {
-      case '/posr/success':
-        res.setHeader('content-type', 'application/xml')
-        fs.createReadStream(path.join(__dirname, '../samples/PunchOutSetupResponse-200.xml')).pipe(res)
-        res.end()
-        break
+  localHttpServer = http.createServer((req, res) => {
+    const requestBody = []
 
-      default:
-        res.end(/\d+/.exec(req.url)[0])
-    }
+    req.on('data', (chunk) => { requestBody.push(chunk) })
+
+    req.on('end', () => {
+      requests.push(requestBody)
+
+      switch (req.url) {
+        case '/posr/success':
+          debug('replying with successful XML response')
+          res.setHeader('content-type', 'application/xml')
+          res.end(POSR_CONTENT)
+          break
+
+        default:
+          res.statusCode = parseInt(/\d+/.exec(req.url)[0], 10)
+          debug('replying with code %d', res.statusCode)
+          res.end()
+      }
+    })
   })
-  server.listen(0, '127.0.0.1', () => { ASSIGNED_PORT = server.address().port; debug('LOCAL TEST SERVER LISTENING ON', JSON.stringify(server.address())) })
+
+  localHttpServer.listen(0, '127.0.0.1', () => {
+    ASSIGNED_PORT = localHttpServer.address().port
+    debug('LOCAL TEST SERVER LISTENING ON http://%s:%d', localHttpServer.address().address, ASSIGNED_PORT)
+  })
 })
 
 after(function (done) {
-  server.on('close', () => { console.log('LOCAL TEST SERVER CLOSED'); done() })
-  server.close()
+  localHttpServer.on('close', () => { debug('LOCAL TEST SERVER CLOSED'); done() })
+  localHttpServer.close()
 })
 
+/**
+ * TESTS
+ */
 describe('the PunchOut Request/Response cycle', function () {
   context('with a successful response', function () {
     it('must be fulfilled', function () {
@@ -52,7 +87,6 @@ describe('the PunchOut Request/Response cycle', function () {
         .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
         .submit(`http://localhost:${ASSIGNED_PORT}/posr/success`)
         .then(function (response) {
-          debug('%j', response)
           /**
            * Verify that the response contains the correct status code and text.
            */
@@ -72,13 +106,18 @@ describe('the PunchOut Request/Response cycle', function () {
           const now = new Date()
           const diffInMilliseconds = now.getTime() - timestamp.getTime()
 
-          expect(diffInMilliseconds).to.be.lessThan(1000)
+          expect(diffInMilliseconds).to.be.lessThan(1200)
         })
     })
   })
 
   context('with a failed HTTP connection', function () {
     it('must be rejected', function (done) {
+      /**
+       * This test must not timeout before the socket.
+       */
+      this.timeout(5000)
+
       const posreq = new cxml.PunchOutSetupRequest()
 
       posreq
@@ -89,10 +128,23 @@ describe('the PunchOut Request/Response cycle', function () {
         .then(function (response) {
           done(new Error('The promise was not rejected'))
         })
-        .catch(function (err) {
-          console.log(err)
-          done()
+        .catch(() => { done() })
+    })
+  })
+
+  context('with an HTTP error', function () {
+    it('must be rejected', function (done) {
+      const posreq = new cxml.PunchOutSetupRequest()
+
+      posreq
+        .setBuyerInfo({ domain: 'DUNS', id: '987654' })
+        .setSupplierInfo({ domain: 'DUNS', id: '123456' })
+        .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
+        .submit(`http://localhost:${ASSIGNED_PORT}/posr/500`)
+        .then(function (response) {
+          done(new Error('The promise was not rejected'))
         })
+        .catch(() => { done() })
     })
   })
 })

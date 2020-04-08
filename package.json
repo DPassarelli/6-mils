@@ -1,14 +1,16 @@
 {
   "name": "6-mils",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A JS library for sending, receiving, and parsing cXML messages.",
   "main": "main.js",
   "scripts": {
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "cover:test": "nyc --silent npm run test:unit && nyc --no-clean npm run test:func",
+    "cover:report": "nyc report --reporter=text-lcov",
+    "cover": "npm run cover:test && npm run cover:report | coveralls",
     "lint": "standard",
-    "test:unit": "DEBUG=6-mils:* mocha --recursive --spec **/*.spec.js",
-    "test:func": "DEBUG=6-mils:* mocha --spec test/functional/*",
-    "test": "npm run lint"
+    "test:unit": "DEBUG=6-mils:* mocha --recursive *.spec.js **/*.spec.js",
+    "test:func": "DEBUG=6-mils:* mocha test/functional/*",
+    "test": "npm run lint && npm run cover:test"
   },
   "repository": {
     "type": "git",
@@ -61,9 +63,21 @@
       "test/"
     ],
     "per-file": true,
-    "lines": 92,
-    "statements": 92,
-    "functions": 92,
-    "branches": 92
+    "lines": [
+      85,
+      92
+    ],
+    "statements": [
+      85,
+      92
+    ],
+    "functions": [
+      85,
+      92
+    ],
+    "branches": [
+      85,
+      92
+    ]
   }
 }
