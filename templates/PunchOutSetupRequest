@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/{{ CXML_VERSION }}/cXML.dtd">
+<!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/{{ version }}/cXML.dtd">
 <cXML xml:lang="en-US" payloadID="{{ payloadId }}" timestamp="{{ timestamp }}">
   <Header>
     <From>
