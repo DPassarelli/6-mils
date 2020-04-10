@@ -48,7 +48,7 @@
   },
   "mocha": {
     "reporter": "min",
-    "exclude": "node_modules/**/*.spec.js",
+    "exclude": "node_modules/",
     "file": "test/setup.js",
     "ui": "bdd"
   },
