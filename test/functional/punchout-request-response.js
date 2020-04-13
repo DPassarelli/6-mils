@@ -15,7 +15,13 @@ const cxml = require('../../main.js')
  * The contents of a successful cXML response.
  * @type {String}
  */
-const POSR_CONTENT = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-200.xml')).toString()
+const POSR_SUCCESS_CONTENT = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-200.xml')).toString()
+
+/**
+ * The contents of a failed (non-successful) cXML response.
+ * @type {String}
+ */
+const POSR_FAILURE_CONTENT = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-400.xml')).toString()
 
 /**
  * A local HTTP server that will respond to PunchOutSetupRequests.
@@ -51,7 +57,13 @@ before(function () {
         case '/posr/success':
           debug('replying with successful XML response')
           res.setHeader('content-type', 'application/xml')
-          res.end(POSR_CONTENT)
+          res.end(POSR_SUCCESS_CONTENT)
+          break
+
+        case '/posr/failure':
+          debug('replying with failed XML response')
+          res.setHeader('content-type', 'application/xml')
+          res.end(POSR_FAILURE_CONTENT)
           break
 
         default:
@@ -88,6 +100,13 @@ describe('the PunchOut Request/Response cycle', function () {
         .submit(`http://localhost:${ASSIGNED_PORT}/posr/success`)
         .then(function (response) {
           /**
+           * Verify the common property values.
+           */
+          expect(response.payloadId).to.equal('933694607739')
+          expect(response.timestamp).to.equal('2002-08-15T08:46:00-07:00')
+          expect(response.version).to.equal('1.2.014')
+
+          /**
            * Verify that the response contains the correct status code and text.
            */
           expect(response.statusCode).to.equal('200')
@@ -97,6 +116,47 @@ describe('the PunchOut Request/Response cycle', function () {
            * Verify that the response contains the correct URL to redirect to.
            */
           expect(response.url).to.equal('http://xml.workchairs.com/retrieve?reqUrl=20626;Initial=TRUE')
+
+          /**
+           * Verify that the original request has the correct timestamp.
+           */
+          const requestBody = requests.pop()
+          const timestamp = new Date(/timestamp="[^"]+/.exec(requestBody)[0].substring(11))
+          const now = new Date()
+          const diffInMilliseconds = now.getTime() - timestamp.getTime()
+
+          expect(diffInMilliseconds).to.be.lessThan(1200)
+        })
+    })
+  })
+
+  context('with a failed response', function () {
+    it('must be fulfilled', function () {
+      const posreq = new cxml.PunchOutSetupRequest()
+
+      return posreq
+        .setBuyerInfo({ domain: 'DUNS', id: '987654' })
+        .setSupplierInfo({ domain: 'DUNS', id: '123456' })
+        .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
+        .submit(`http://localhost:${ASSIGNED_PORT}/posr/failure`)
+        .then(function (response) {
+          /**
+           * Verify the common property values.
+           */
+          expect(response.payloadId).to.equal('933634634590')
+          expect(response.timestamp).to.equal('2002-08-15T08:48:00-07:00')
+          expect(response.version).to.equal('1.2.014')
+
+          /**
+           * Verify that the response contains the correct status code and text.
+           */
+          expect(response.statusCode).to.equal('400')
+          expect(response.statusText).to.equal('XML document contained a doctype but failed validation.')
+
+          /**
+           * Verify that the response contains a blank URL.
+           */
+          expect(response.url).to.equal('')
 
           /**
            * Verify that the original request has the correct timestamp.

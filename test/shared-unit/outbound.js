@@ -9,34 +9,6 @@
  * @return {undefined}
  */
 function CommonTestSuite (T) {
-  describe('version', function () {
-    const instance = new T()
-
-    it('must be a property', function () {
-      const expected = 'string'
-      const actual = typeof instance.version
-
-      expect(actual).to.equal(expected)
-    })
-
-    it('must be read-only', function () {
-      const expected = instance.version
-
-      instance.version = 'something else'
-
-      const actual = instance.version
-
-      expect(actual).to.equal(expected)
-    })
-
-    it('must have the expected default value', function () {
-      const expected = '1.2.045'
-      const actual = instance.version
-
-      expect(actual).to.equal(expected)
-    })
-  })
-
   describe('payloadId', function () {
     /**
        * A regular expression that describes the default format for the
@@ -44,25 +16,6 @@ function CommonTestSuite (T) {
        * @type {RegExp}
        */
     const PAYLOAD_ID = /^\d+\.\d+\.\w+@unknown$/
-
-    it('must be a property', function () {
-      const instance = new T()
-      const expected = 'string'
-      const actual = typeof instance.version
-
-      expect(actual).to.equal(expected)
-    })
-
-    it('must be read-only', function () {
-      const instance = new T()
-      const expected = instance.payloadId
-
-      instance.payloadId = 'something else'
-
-      const actual = instance.payloadId
-
-      expect(actual).to.equal(expected)
-    })
 
     it('must return the value passed into the constructor, if fully specified', function () {
       const instance = new T({ payloadId: 'test-test.1.2.3@whoknowswhere' })
@@ -91,32 +44,14 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('toString', function () {
-    const instance = new T()
+  describe('version', function () {
+    it('must have the correct value', function () {
+      const instance = new T()
 
-    it('must be a method', function () {
-      const expected = 'function'
-      const actual = typeof instance.toString
+      const expected = '1.2.045'
+      const actual = instance.version
 
       expect(actual).to.equal(expected)
-    })
-
-    it('must return a value that indicates it is cXML', function () {
-      const expected = /^<\?xml version="1\.0" encoding="utf-8"\?><!DOCTYPE cXML SYSTEM "http:\/\/xml\.cxml\.org\/schemas\/cXML\/[1-9]([0-9]+)?\.\d+\.\d+\/cXML\.dtd"><cXML[^>]+>.+<\/cXML>$/
-      const actual = instance.toString()
-
-      expect(actual).to.match(expected)
-    })
-
-    it('must return all of the XML in a single line by default)', function () {
-      const expected = 1
-      const numberOfLines = instance.toString().split(/>\s+</g).length
-      expect(numberOfLines).to.equal(expected)
-    })
-
-    it('must return the XML across multiple lines if the "format" option is specified', function () {
-      const numberOfLines = instance.toString({ format: true }).split(/>\s+</g).length
-      expect(numberOfLines).to.be.greaterThan(1)
     })
   })
 
@@ -327,6 +262,51 @@ function CommonTestSuite (T) {
         .toString()
 
       expect(actual).to.match(expected)
+    })
+  })
+
+  describe('setExtrinsic', function () {
+    let instance = null
+
+    beforeEach(function () {
+      instance = new T()
+    })
+
+    it('must be a method', function () {
+      const expected = 'function'
+      const actual = typeof instance.setExtrinsic
+
+      expect(actual).to.equal(expected)
+    })
+
+    it('must return itself', function () {
+      const actual = instance.setExtrinsic()
+      expect(actual).to.equal(instance)
+    })
+
+    it('must throw an error if called with a value that is not a plain object', function () {
+      expect(function () { instance.setExtrinsic(new Date()) }).to.throw('The "exts" parameter, if provided, must be a plain object.')
+    })
+
+    it('must populate the "Extrinsic" element(s) in the cXML message', function () {
+      const expected = new RegExp('<Extrinsic name="Ext1">Val1</Extrinsic><Extrinsic name="Ext2">Val2</Extrinsic>')
+      const actual = instance.setExtrinsic({ Ext1: 'Val1', Ext2: 'Val2' }).toString()
+
+      expect(actual).to.match(expected)
+    })
+
+    it('must clear the "Extrinsic" element(s) in the cXML message, if called a second time with no parameter value', function () {
+      const expected = new RegExp('<Extrinsic[^>]?>')
+      const actual = instance.setExtrinsic({ Ext1: 'Val1', Ext2: 'Val2' }).setExtrinsic().toString()
+
+      expect(actual).to.not.match(expected)
+    })
+
+    it('must clear the "Extrinsic" element(s) in the cXML message, if called with `null`', function () {
+      const expected = new RegExp('<Extrinsic[^>]?>')
+      const actual = instance.setExtrinsic(null).toString()
+
+      expect(actual).to.not.match(expected)
     })
   })
 
