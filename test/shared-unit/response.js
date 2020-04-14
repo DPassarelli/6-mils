@@ -1,5 +1,11 @@
 /* eslint-env mocha */
 
+const fs = require('fs')
+const path = require('path')
+
+const SAMPLE_CXML = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse.xml')).toString()
+const FAILED_CXML = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-400.xml')).toString()
+
 /**
  * A series of unit tests that are applicable to all cXML response message
  * objects.
@@ -9,10 +15,10 @@
  * @return {undefined}
  */
 function CommonTestSuite (T) {
-  describe('statusCode', function () {
-    const instance = new T()
+  describe('the "statusCode" property', function () {
+    const instance = new T(SAMPLE_CXML)
 
-    it('must be a property', function () {
+    it('must exist', function () {
       const expected = 'string'
       const actual = typeof instance.statusCode
 
@@ -30,10 +36,10 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('statusText', function () {
-    const instance = new T()
+  describe('the "statusText" property', function () {
+    const instance = new T(SAMPLE_CXML)
 
-    it('must be a property', function () {
+    it('must exist', function () {
       const expected = 'string'
       const actual = typeof instance.statusText
 
@@ -52,7 +58,7 @@ function CommonTestSuite (T) {
 
     context('for a successful response', function () {
       it('must have the correct value even if something different is specified in the source XML', function () {
-        const testInstance = new T('<?xml version="1.0" encoding="UTF-8"?><cXML xml:lang="en-US" payloadID="123ABC" timestamp="2020-04-13T17:13:27+00:00"><Response><Status code="200" text="OK"/></Response></cXML>')
+        const testInstance = new T(SAMPLE_CXML.replace(/Status code="200" text="success"/, 'Status code="200" text="OK"'))
         const expected = 'success'
         const actual = testInstance.statusText
 
@@ -62,7 +68,7 @@ function CommonTestSuite (T) {
 
     context('for a non-successful response', function () {
       it('must have the correct value if there is no status description in the source XML', function () {
-        const testInstance = new T('<?xml version="1.0" encoding="UTF-8"?><cXML xml:lang="en-US" payloadID="123ABC" timestamp="2020-04-13T17:13:27+00:00"><Response><Status code="400" text="Bad request"/></Response></cXML>')
+        const testInstance = new T(FAILED_CXML.replace(/<Status code="400" text="Failure">.+<\/Status>/, '<Status code="400" text="Bad request"></Status>'))
         const expected = 'Bad request'
         const actual = testInstance.statusText
 
@@ -70,8 +76,8 @@ function CommonTestSuite (T) {
       })
 
       it('must have the correct value if a status description is specified in the source XML', function () {
-        const testInstance = new T('<?xml version="1.0" encoding="UTF-8"?><cXML xml:lang="en-US" payloadID="123ABC" timestamp="2020-04-13T17:13:27+00:00"><Response><Status code="400" text="Bad request"/>The XML request was malformed.</Response></cXML>')
-        const expected = 'The XML request was malformed.'
+        const testInstance = new T(FAILED_CXML)
+        const expected = 'XML document contained a doctype but failed validation.'
         const actual = testInstance.statusText
 
         expect(actual).to.equal(expected)

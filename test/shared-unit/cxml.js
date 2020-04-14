@@ -1,5 +1,8 @@
 /* eslint-env mocha */
 
+const fs = require('fs')
+const path = require('path')
+
 /**
  * A series of unit tests that are applicable to all cXML message objects.
  * objects.
@@ -11,20 +14,29 @@
 function CommonTestSuite (T) {
   let instance = null
 
-  beforeEach(function () {
+  before(function (done) {
     try {
       instance = new T()
+      done()
     } catch (e) {
       if (e.message === 'The "cxml" parameter is required and must be well-formed XML.') {
-        instance = new T('<?xml version="1.0" encoding="utf-8"?><!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/1.2.014/cXML.dtd"><cXML xml:lang="en" payloadID="12345.67890.ABC" timestamp="2020-04-13T17:13:27+00:00"></cXML>')
+        fs.readFile(path.join(__dirname, `../samples/${T.name}.xml`), function (err, contents) {
+          if (err) {
+            done(err)
+            return
+          }
+
+          instance = new T(contents.toString())
+          done()
+        })
       } else {
-        throw e
+        done(e)
       }
     }
   })
 
-  describe('version', function () {
-    it('must be a property', function () {
+  describe('the "version" property', function () {
+    it('must exist', function () {
       const expected = 'string'
       const actual = typeof instance.version
 
@@ -42,8 +54,8 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('payloadId', function () {
-    it('must be a property', function () {
+  describe('the "payloadId" property', function () {
+    it('must exist', function () {
       const expected = 'string'
       const actual = typeof instance.version
 
@@ -61,8 +73,8 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('timestamp', function () {
-    it('must be a property', function () {
+  describe('the "timestamp" property', function () {
+    it('must exist', function () {
       const expected = 'string'
       const actual = typeof instance.version
 
@@ -80,8 +92,8 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('toString', function () {
-    it('must be a method', function () {
+  describe('the "toString" method', function () {
+    it('must exist', function () {
       const expected = 'function'
       const actual = typeof instance.toString
 
@@ -89,7 +101,7 @@ function CommonTestSuite (T) {
     })
 
     it('must return a value that indicates it is cXML', function () {
-      const expected = /^<\?xml version="1\.0" encoding="utf-8"\?><!DOCTYPE cXML SYSTEM "http:\/\/xml\.cxml\.org\/schemas\/cXML\/[1-9]([0-9]+)?\.\d+\.\d+\/cXML\.dtd"><cXML[^>]+>.+<\/cXML>$/
+      const expected = /^<\?xml version="1\.0" encoding="(UTF|utf)-8"\?><!DOCTYPE cXML SYSTEM "http:\/\/xml\.cxml\.org\/schemas\/cXML\/[1-9]([0-9]+)?\.\d+\.\d+\/cXML\.dtd"><cXML[^>]+>.+<\/cXML>$/
       const actual = instance.toString()
 
       expect(actual).to.match(expected)

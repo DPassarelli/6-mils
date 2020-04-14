@@ -15,7 +15,7 @@ const cxml = require('../../main.js')
  * The contents of a successful cXML response.
  * @type {String}
  */
-const POSR_SUCCESS_CONTENT = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-200.xml')).toString()
+const POSR_SUCCESS_CONTENT = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse.xml')).toString()
 
 /**
  * The contents of a failed (non-successful) cXML response.

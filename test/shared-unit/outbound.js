@@ -9,7 +9,7 @@
  * @return {undefined}
  */
 function CommonTestSuite (T) {
-  describe('payloadId', function () {
+  describe('the "payloadId" property', function () {
     /**
        * A regular expression that describes the default format for the
        * "payloadId" property value.
@@ -44,7 +44,7 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('version', function () {
+  describe('the "version" property', function () {
     it('must have the correct value', function () {
       const instance = new T()
 
@@ -55,14 +55,14 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('setBuyerInfo', function () {
+  describe('the "setBuyerInfo" method', function () {
     let instance = null
 
     beforeEach(function () {
       instance = new T()
     })
 
-    it('must be a method', function () {
+    it('must exist', function () {
       const expected = 'function'
       const actual = typeof instance.setBuyerInfo
 
@@ -124,14 +124,14 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('setSupplierInfo', function () {
+  describe('the "setSupplierInfo" method', function () {
     let instance = null
 
     beforeEach(function () {
       instance = new T()
     })
 
-    it('must be a method', function () {
+    it('must exist', function () {
       const expected = 'function'
       const actual = typeof instance.setSupplierInfo
 
@@ -193,14 +193,14 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('setSenderInfo', function () {
+  describe('the "setSenderInfo" method', function () {
     let instance = null
 
     beforeEach(function () {
       instance = new T()
     })
 
-    it('must be a method', function () {
+    it('must exist', function () {
       const expected = 'function'
       const actual = typeof instance.setSenderInfo
 
@@ -265,14 +265,14 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('setExtrinsic', function () {
+  describe('the "setExtrinsic" method', function () {
     let instance = null
 
     beforeEach(function () {
       instance = new T()
     })
 
-    it('must be a method', function () {
+    it('must exist', function () {
       const expected = 'function'
       const actual = typeof instance.setExtrinsic
 
@@ -310,7 +310,7 @@ function CommonTestSuite (T) {
     })
   })
 
-  describe('submit', function () {
+  describe('the "submit" method', function () {
     const ERR_MSG = 'The "url" parameter is required and must not be a non-empty string.'
     let instance = null
 
@@ -318,7 +318,7 @@ function CommonTestSuite (T) {
       instance = new T()
     })
 
-    it('must be an asynchronous method', function (done) {
+    it('must be asynchronous', function (done) {
       instance.submit()
         .then(() => { done() })
         .catch(() => { done() })
