@@ -101,7 +101,7 @@ function CommonTestSuite (T) {
     })
 
     it('must return a value that indicates it is cXML', function () {
-      const expected = /^<\?xml version="1\.0" encoding="(UTF|utf)-8"\?><!DOCTYPE cXML SYSTEM "http:\/\/xml\.cxml\.org\/schemas\/cXML\/[1-9]([0-9]+)?\.\d+\.\d+\/cXML\.dtd"><cXML[^>]+>.+<\/cXML>$/
+      const expected = /^<\?xml version="1\.0"( encoding="(UTF|utf)-8")?\?><!DOCTYPE cXML SYSTEM "http:\/\/xml\.cxml\.org\/schemas\/cXML\/[1-9]([0-9]+)?\.\d+\.\d+\/cXML\.dtd"><cXML[^>]+>.+<\/cXML>$/
       const actual = instance.toString()
 
       expect(actual).to.match(expected)
