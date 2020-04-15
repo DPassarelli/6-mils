@@ -156,7 +156,7 @@ describe('the PunchOut Request/Response cycle', function () {
           /**
            * Verify that the response contains a blank URL.
            */
-          expect(response.url).to.equal('')
+          expect(response.url).to.be.undefined // eslint-disable-line
 
           /**
            * Verify that the original request has the correct timestamp.
