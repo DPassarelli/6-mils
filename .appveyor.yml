@@ -20,7 +20,6 @@ install:
   - ps: Install-Product node $env:node_version
 
 before_test:
-  - node --version
   - npm --version
   - npm install
 

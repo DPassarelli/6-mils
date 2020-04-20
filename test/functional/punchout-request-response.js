@@ -176,7 +176,7 @@ describe('the PunchOut Request/Response cycle', function () {
       /**
        * This test must not timeout before the socket.
        */
-      this.timeout(5000)
+      this.timeout(15000)
 
       const posreq = new cxml.PunchOutSetupRequest()
 
