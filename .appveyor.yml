@@ -3,11 +3,12 @@ image: Visual Studio 2017
 version: 0.5.0+{build}
 
 environment:
-  DEBUG: 6-mils:*
+  global:
+    - DEBUG: 6-mils:*
   matrix:
-    - nodever: '12'
-    - nodever: '10'
-    - nodever: '8'
+    - node_version: '12'
+    - node_version: '10'
+    - node_version: '8'
 
 matrix:
   fast_finish: true
@@ -16,14 +17,14 @@ init:
   - git config --global core.autocrlf true
 
 install:
-  - ps: Install-Product node $env:nodever
+  - ps: Install-Product node $env:node_version
 
 before_test:
+  - node --version
+  - npm --version
   - npm install
 
 test_script:
-  - node --version
-  - npm --version
   - npm test
 
 build: off
