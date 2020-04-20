@@ -122,8 +122,7 @@ describe('the PunchOut Request/Response cycle', function () {
            */
           const requestBody = requests.pop()
           const timestamp = new Date(/timestamp="[^"]+/.exec(requestBody)[0].substring(11))
-          const now = new Date()
-          const diffInMilliseconds = now.getTime() - timestamp.getTime()
+          const diffInMilliseconds = Date.now() - timestamp.getTime()
 
           expect(diffInMilliseconds).to.be.lessThan(1200)
         })
@@ -163,8 +162,7 @@ describe('the PunchOut Request/Response cycle', function () {
            */
           const requestBody = requests.pop()
           const timestamp = new Date(/timestamp="[^"]+/.exec(requestBody)[0].substring(11))
-          const now = new Date()
-          const diffInMilliseconds = now.getTime() - timestamp.getTime()
+          const diffInMilliseconds = Date.now() - timestamp.getTime()
 
           expect(diffInMilliseconds).to.be.lessThan(1200)
         })
