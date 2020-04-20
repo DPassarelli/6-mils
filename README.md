@@ -1,6 +1,7 @@
 # 6-mils
 
-[![Build Status](https://travis-ci.org/DPassarelli/6-mils.svg?branch=master)](https://travis-ci.org/DPassarelli/6-mils)
+[![Linux Build Status](https://travis-ci.org/DPassarelli/6-mils.svg?branch=master)](https://travis-ci.org/DPassarelli/6-mils)
+[![Windows Build Status](https://ci.appveyor.com/api/projects/status/o9v8vek7vyj0bjvu/branch/master?svg=true)](https://ci.appveyor.com/project/DPassarelli/6-mils)
 [![Coverage Status](https://coveralls.io/repos/github/DPassarelli/6-mils/badge.svg?branch=master)](https://coveralls.io/github/DPassarelli/6-mils?branch=master)
 
 **A JS library for creating, sending, and parsing [cXML messages](http://cxml.org).**
