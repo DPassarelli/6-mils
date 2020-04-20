@@ -174,9 +174,10 @@ describe('the PunchOut Request/Response cycle', function () {
   context('with a failed HTTP connection', function () {
     it('must be rejected', function (done) {
       /**
-       * This test must not timeout before the socket.
+       * This test must not timeout before the socket. A value of at least 10s
+       * is required for Windows.
        */
-      this.timeout(15000)
+      this.timeout(10000)
 
       const posreq = new cxml.PunchOutSetupRequest()
 

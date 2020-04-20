@@ -27,6 +27,6 @@ test_script:
   - npx mocha --reporter mocha-junit-reporter "**/*.spec.js" test/functional/*
   - pwsh: |
         $webClient = New-Object System.Net.WebClient
-        $webClient.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test-results.xml))
+        $webClient.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test-results.xml)) -Verbose
 
 build: off
