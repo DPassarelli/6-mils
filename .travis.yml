@@ -1,5 +1,4 @@
 git:
-  depth: 1
   quiet: true
 
 os: linux
