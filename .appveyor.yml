@@ -1,0 +1,24 @@
+environment:
+  matrix:
+    - nodever: '12'
+    - nodever: '10'
+    - nodever: '8'
+
+matrix:
+  fast_finish: yes
+
+init:
+  - git config --global core.autocrlf true
+
+install:
+  - ps: Install-Product node $env:nodever
+  - node --version
+  - npm --version
+
+before_test:
+  - npm install
+
+test_script:
+  - npm test
+
+build: no
