@@ -1,4 +1,9 @@
+image: Visual Studio 2017
+
+version: 0.5.0+{build}
+
 environment:
+  DEBUG: 6-mils:*
   matrix:
     - nodever: '12'
     - nodever: '10'
@@ -12,13 +17,13 @@ init:
 
 install:
   - ps: Install-Product node $env:nodever
-  - node --version
-  - npm --version
 
 before_test:
   - npm install
 
 test_script:
+  - node --version
+  - npm --version
   - npm test
 
 build: off
