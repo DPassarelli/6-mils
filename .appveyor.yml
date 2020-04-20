@@ -5,7 +5,7 @@ environment:
     - nodever: '8'
 
 matrix:
-  fast_finish: yes
+  fast_finish: true
 
 init:
   - git config --global core.autocrlf true
@@ -21,4 +21,4 @@ before_test:
 test_script:
   - npm test
 
-build: no
+build: off
