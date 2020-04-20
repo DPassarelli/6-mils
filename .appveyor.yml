@@ -4,7 +4,7 @@ version: 0.5.0+{build}
 
 environment:
   global:
-    - DEBUG: 6-mils:*
+    DEBUG: 6-mils:*
   matrix:
     - node_version: '12'
     - node_version: '10'
