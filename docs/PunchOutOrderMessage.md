@@ -8,7 +8,7 @@ A PunchOutOrderMessage message is received back from the supplier once the buyer
 Each instance of `PunchOutOrderMessage` must be constructed with a single argument that is well-formed XML, and adhere to a known-version of the cXML DTD.
 
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
@@ -21,7 +21,7 @@ Each instance of `PunchOutOrderMessage` must be constructed with a single argume
 
 The unique identifier for this PunchOut session. This value is used to correlate this PunchOutOrderMessage with the initiating PunchOutSetupRequest. Read-only.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Message>` → `<PunchOutOrderMessage>` → `<BuyerCookie>`
 
@@ -35,14 +35,16 @@ The credentials of the purchaser's organization (the one that the PunchOutOrderM
 | `domain` | {String} | The value of the `domain` attribute in the `<Credential>` element. |
 | `id` | {String} | The contents of the `<Identity>` child element. |
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Header>` → `<To>`
 
 
 ### `items` {Array}
 
-The list of all the items that were in the buyer's shopping cart when they "checked out" from the supplier's PunchOut site (see note below). Each entry is a dictionary containing the following keys:
+The list of all the items that were in the buyer's shopping cart when they "checked out" from the supplier's PunchOut site (see note below). **If the PunchOut session is ended with nothing in the buyer's shopping cart, then this list will be empty (`items.length === 0`).**
+
+Each entry is a dictionary containing the following keys:
 
 | Name | Type | Notes |
 |------|------|-------|
@@ -56,17 +58,13 @@ The list of all the items that were in the buyer's shopping cart when they "chec
 | `unitPrice` | {Number} | The price for each unit of this item. |
 | `uom` | {String} | The unit of measure for this item, according to the [UN/CEFACT Unit of Measure Common Codes](https://www.unece.org/cefact/codesfortrade/codes_index.html). |
 
-##### `classification`
+#### `classification`
 
 If the `<ItemIn>` element contains one or more `<Classification>` child elements, they will be parsed and entered into this dictionary of key-value pairs. The value of the `domain` attribute will be the key, and the contents of the element will be the value. For example,
 
 `<Classification domain="UNSPSC">5136030000</Classification>` → `{ UNSPSC: '5136030000' }`
 
-#### Notes
-
-If the PunchOut session is ended with nothing in the buyer's shopping cart, then this list will be empty (`items.length === 0`).
-
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Message>` → `<PunchOutOrderMessage>` → `<ItemIn>`
 
@@ -75,7 +73,7 @@ If the PunchOut session is ended with nothing in the buyer's shopping cart, then
 
 The unique identifier for this cXML message. Read-only.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` (`payloadID` attribute)
 
@@ -90,7 +88,7 @@ The credentials for the sending entity. Returns a dictionary containing the foll
 | `id` | {String} | The contents of the `<Identity>` child element. |
 | `ua` | {String} | The contents of the `<UserAgent>` element. |
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Header>` → `<Sender>`
 
@@ -104,7 +102,7 @@ The credentials of the supplier's organization (the one that the PunchOutOrderMe
 | `domain` | {String} | The value of the `domain` attribute in the `<Credential>` element. |
 | `id` | {String} | The contents of the `<Identity>` child element. |
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Header>` → `<From>`
 
@@ -113,7 +111,7 @@ The credentials of the supplier's organization (the one that the PunchOutOrderMe
 
 The date and time of the cXML transmission, which is expected to be in [ISO 8601 format](https://www.w3.org/TR/NOTE-datetime). Read-only.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` (`timestamp` attribute)
 
@@ -129,7 +127,7 @@ The total amount (of units and costs) from the shopping cart. Returns a dictiona
 | `items` | {Number} | The number of items in the order. This value will always be the same as `items.length`. |
 | `units` | {Number} | The total number of all units for all items in the order. |
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Message>` → `<PunchOutOrderMessageHeader>` → `<Total>` → `<Money>`
 

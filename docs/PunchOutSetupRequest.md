@@ -18,14 +18,13 @@ const cxml = require('6-mils')
 const posreq = new cxml.PunchOutSetupRequest()
 ```
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
 | `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
-
-##### Options
+#### `options`
 
 | Key | Type | Notes |
 |-----|------|-------|
@@ -58,7 +57,7 @@ _Examples:_
 
 The unique identifier for this PunchOut session. This value will be used later on by the supplier when sending back the corresponding PunchOutOrderMessage. Read-only.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BuyerCookie>`
 
@@ -67,9 +66,25 @@ The unique identifier for this PunchOut session. This value will be used later o
 
 The unique identifier for this cXML message. Read-only.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` (`payloadID` attribute)
+
+
+### `timestamp` {String}
+
+The date and time of the cXML transmission, which will be in [ISO 8601 format](https://www.w3.org/TR/NOTE-datetime). Read-only.
+
+**This property will not have a value until the `submit()` method is called.**
+
+#### Corresponding cXML Element
+
+`<cXML>` (`timestamp` attribute)
+
+
+### `version` {String}
+
+The version of the cXML protocol used to generate the POSReq. This is specified in the referenced DTD. Read-only.
 
 
 ## Methods
@@ -81,13 +96,13 @@ Nearly all methods are [chainable](https://en.wikipedia.org/wiki/Method_chaining
 
 Sets the credentials for the purchaser's organization (the one that the POSReq is being sent from).
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
 | `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
-##### Options
+#### `options`
 
 | Key | Type | Notes |
 |-----|------|-------|
@@ -96,7 +111,7 @@ Sets the credentials for the purchaser's organization (the one that the POSReq i
 
 **Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Header>` → `<From>`
 
@@ -105,11 +120,11 @@ Sets the credentials for the purchaser's organization (the one that the POSReq i
 
 Sets the collection of `Extrinsic` elements. Omit the parameter value (or leave it as an empty object) in order to clear the collection.
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
-| `dict` | {Object?} | A plain object. For each key, a separate `<Extrinsic>` element will be created, with the name of the key put into the `name` attribute, and the value put into the text of the element itself. |
+| `hash` | {Object?} | A plain object. For each key, a separate `<Extrinsic>` element will be created, with the name of the key put into the `name` attribute, and the value put into the text of the element itself. |
 
 _Example:_
 
@@ -117,7 +132,7 @@ _Example:_
 |--------------|---------------|
 | `setExtrinsic({ first: 'John', last: 'Doe' })` | `<Extrinsic name="first">John</Extrinsic><Extrinsic name="last">Doe</Extrinsic>` |
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<Extrinsic>`
 
@@ -126,13 +141,13 @@ _Example:_
 
 Sets the address that the buyer's web browser (along with the shopping cart data) will be redirected to after they "checkout" (meaning, complete their shopping) from the supplier's punchout site.
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
 | `url` | {String} | A valid URL that the user will be redirected to after completing the PunchOut session. |
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BrowserFormPost>` → `<URL>`
 
@@ -141,13 +156,13 @@ Sets the address that the buyer's web browser (along with the shopping cart data
 
 Sets the credentials for the sending entity (either `6-mils` or a network relay).
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
 | `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
-##### Options
+#### `options`
 
 | Key | Type | Notes |
 |-----|------|-------|
@@ -158,7 +173,7 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 **Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Header>` → `<Sender>`
 
@@ -167,13 +182,13 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 Sets the credentials for the supplier's organization (the one that the POSReq is being sent to).
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
 | `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
-##### Options
+#### `options`
 
 | Key | Type | Notes |
 |-----|------|-------|
@@ -182,7 +197,7 @@ Sets the credentials for the supplier's organization (the one that the POSReq is
 
 **Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
 
-##### Corresponding cXML Element
+#### Corresponding cXML Element
 
 `<cXML>` → `<Header>` → `<To>`
 
@@ -191,7 +206,7 @@ Sets the credentials for the supplier's organization (the one that the POSReq is
 
 Initiates the transmission of the PunchOutSetupRequest message to the supplier, at the specified URL.
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
@@ -199,20 +214,20 @@ Initiates the transmission of the PunchOutSetupRequest message to the supplier, 
 
  The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `PunchOutSetupResponse`. Please refer to the documentation for that object type for more information.
 
-**Note: the promise will only be rejected if there is a problem with the underlying HTTP transmission. The supplier may return a cXML message that indicates an error with the POSReq, or with their system, but this can only be determined by checking the properties of the returned `PunchOutSetupResponse`.**
+**The promise will only be rejected if there is a problem with the underlying HTTP transmission. The supplier may return a cXML message that indicates an error with the POSReq, or with their system, but this can only be determined by checking the properties of the returned `PunchOutSetupResponse`.**
 
 
 ### `toString` {String}
 
 Returns the raw cXML of the underlying POSReq message. User-provided values containing control characters will be escaped.
 
-##### Parameters
+#### Parameters
 
 | Name | Type | Notes |
 |------|------|-------|
 | `options` | {Object?} | A plain object, with one or more of the keys listed below. |
 
-##### Options
+#### `options`
 
 | Key | Type | Notes |
 |-----|------|-------|

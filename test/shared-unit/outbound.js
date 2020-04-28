@@ -285,7 +285,7 @@ function CommonTestSuite (T) {
     })
 
     it('must throw an error if called with a value that is not a plain object', function () {
-      expect(function () { instance.setExtrinsic(new Date()) }).to.throw('The "exts" parameter, if provided, must be a plain object.')
+      expect(function () { instance.setExtrinsic(new Date()) }).to.throw('The "hash" parameter, if provided, must be a plain object.')
     })
 
     it('must populate the "Extrinsic" element(s) in the cXML message', function () {
