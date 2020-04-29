@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/{{ version }}/cXML.dtd">
-<cXML xml:lang="en-US" payloadID="{{ payloadId }}" timestamp="{{ timestamp }}">
+<cXML xml:lang="{{ language }}" payloadID="{{ payloadId }}" timestamp="{{ timestamp }}">
   <Header>
     <From>
       <Credential domain="{{ from.domain }}">
@@ -23,8 +23,8 @@
   <Request>
     <PunchOutSetupRequest operation="{{ action }}">
       <BuyerCookie>{{ buyerCookie }}</BuyerCookie>
-      {% for name, value in extrinsics %}
-      <Extrinsic name="{{ name }}">{{ value }}</Extrinsic>
+      {% for key, value in extrinsics %}
+      <Extrinsic name="{{ key }}">{{ value }}</Extrinsic>
       {% endfor %}
       <BrowserFormPost>
         <URL>{{ postback }}</URL>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE cXML SYSTEM "http://xml.cxml.org/schemas/cXML/{{ version }}/cXML.dtd">
-<cXML xml:lang="en-US" payloadID="{{ payloadId }}" timestamp="{{ timestamp }}">
+<cXML xml:lang="{{ language }}" payloadID="{{ payloadId }}" timestamp="{{ timestamp }}">
   <Header>
     <From>
       <Credential domain="{{ from.domain }}">
@@ -27,36 +27,80 @@
             <Money currency="{{ order.total.currency }}">{{ order.total.amnt }}</Money>
           </Total>
           <ShipTo>
-            <Address isoCountryCode="" addressID="">
-              <Name xml:lang="en-US">{{ shipTo.name }}</Name>
-              <PostalAddress name="{{ shipTo.postalAddress.name }}">
+            <Address isoCountryCode="{{ shipTo.countryCode }}" addressID="{{ shipTo.addressId }}">
+              <Name xml:lang="{{ language }}">{{ shipTo.companyName }}</Name>
+              <PostalAddress name="{{ shipTo.address.nickname }}">
+                {% for value in shipTo.address.attentionOf %}
+                <DeliverTo>{{ value }}</DeliverTo>
+                {% endfor %}
+                <Street>{{ shipTo.address.street }}</Street>
+                <City>{{ shipTo.address.city }}</City>
+                <State>{{ shipTo.address.state }}</State>
+                <PostalCode>{{ shipTo.address.postalCode }}</PostalCode>
+                <Country isoCountryCode="{{ shipTo.countryCode }}">{{ shipTo.address.country }}</Country>
               </PostalAddress>
-              <Email name="{{ shipTo.email.name }}">{{ shipTo.email.address }}</Email>
-              <Phone name="{{ shipTo.phone.name }}">
+              <Email name="{{ shipTo.email.nickname }}">{{ shipTo.email.address }}</Email>
+              <Phone name="{{ shipTo.phone.nickname }}">
                 <TelephoneNumber>
-                  <CountryCode isoCountryCode=""></CountryCode>
-                  <AreaOrCityCode></AreaOrCityCode>
-                  <Number></Number>
+                  <CountryCode isoCountryCode="{{ shipTo.countryCode }}">{{ shipTo.phone.countryCode }}</CountryCode>
+                  <AreaOrCityCode>{{ shipTo.phone.areaOrCityCode }}</AreaOrCityCode>
+                  <Number>{{ shipTo.phone.number }}</Number>
                 </TelephoneNumber>
               </Phone>
             </Address>
           </ShipTo>
           <BillTo>
+            <Address isoCountryCode="{{ billTo.countryCode }}" addressID="{{ billTo.address.id }}">
+              <Name xml:lang="{{ language }}">{{ billTo.companyName }}</Name>
+              <PostalAddress name="{{ billTo.address.nickname }}">
+                <Street>{{ billTo.address.street }}</Street>
+                <City>{{ billTo.address.city }}</City>
+                <State>{{ billTo.address.state }}</State>
+                <PostalCode>{{ billTo.address.postalCode }}</PostalCode>
+                <Country isoCountryCode="{{ billTo.countryCode }}">{{ billTo.address.country }}</Country>
+              </PostalAddress>
+              <Email name="{{ billTo.email.nickname }}">{{ billTo.email.address }}</Email>
+              <Phone name="{{ billTo.phone.nickname }}">
+                <TelephoneNumber>
+                  <CountryCode isoCountryCode="{{ billTo.countryCode }}">{{ billTo.phone.countryCode }}</CountryCode>
+                  <AreaOrCityCode>{{ billTo.phone.areaOrCityCode }}</AreaOrCityCode>
+                  <Number>{{ billTo.phone.number }}</Number>
+                </TelephoneNumber>
+              </Phone>
+            </Address>
           </BillTo>
           <Shipping>
             <Money currency="{{ order.shipping.currency }}">{{ order.shipping.amnt }}</Money>
-            <Description xml:lang="en-US">{{ order.shipping.description }}</Description>
+            <Description xml:lang="{{ language }}">{{ order.shipping.description }}</Description>
           </Shipping>
           <Tax>
             <Money currency="{{ order.tax.currency }}">{{ order.tax.amnt }}</Money>
-            <Description xml:lang="en-US">{{ order.tax.description }}</Description>
+            <Description xml:lang="{{ language }}">{{ order.tax.description }}</Description>
           </Tax>
           <Payment>
           </Payment>
-          {% for name, value in extrinsics %}
-          <Extrinsic name="{{ name }}">{{ value }}</Extrinsic>
+          {% for key, value in extrinsics %}
+          <Extrinsic name="{{ key }}">{{ value }}</Extrinsic>
           {% endfor %}
         </OrderRequestHeader>
     </OrderRequest>
+    {% for item in items %}
+    <ItemOut quantity="{{ item.quantity }}" lineNumber="{{ item.lineNumber }}">
+      <ItemID>
+        <SupplierPartID></SupplierPartID>
+        <SupplierPartAuxilaryID></SupplierPartAuxilaryID>
+      </ItemID>
+      <ItemDetail>
+        <UnitPrice>
+          <Money currency=""></Money>
+        </UnitPrice>
+        <Description></Description>
+        <UnitOfMeasure></UnitOfMeasure>
+        {% for key, value in item.classification %}
+        <Classification domain="{{ key }}">{{ value }}</Classification>
+        {% endfor %}
+      </ItemDetail>
+    </ItemOut>
+    {% endfor %}
   </Request>
 </cXML>
