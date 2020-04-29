@@ -7,16 +7,17 @@ const SAMPLE_CXML = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSet
 const FAILED_CXML = fs.readFileSync(path.join(__dirname, '../samples/PunchOutSetupResponse-400.xml')).toString()
 
 /**
- * A series of unit tests that are applicable to all cXML response message
+ * A series of unit tests that are applicable to all response cXML message
  * objects.
  *
- * @param  {Function}   T   A constructor for the object under test.
+ * @param  {Function}   factory   A factory for creating new instances of the
+ *                                class under test.
  *
  * @return {undefined}
  */
-function CommonTestSuite (T) {
+function CommonTestSuite (factory) {
   describe('the "statusCode" property', function () {
-    const instance = new T(SAMPLE_CXML)
+    const instance = factory(SAMPLE_CXML)
 
     it('must exist', function () {
       const expected = 'string'
@@ -27,9 +28,7 @@ function CommonTestSuite (T) {
 
     it('must be read-only', function () {
       const expected = instance.statusCode
-
       instance.statusCode = 'something else'
-
       const actual = instance.statusCode
 
       expect(actual).to.equal(expected)
@@ -37,7 +36,7 @@ function CommonTestSuite (T) {
   })
 
   describe('the "statusText" property', function () {
-    const instance = new T(SAMPLE_CXML)
+    const instance = factory(SAMPLE_CXML)
 
     it('must exist', function () {
       const expected = 'string'
@@ -48,9 +47,7 @@ function CommonTestSuite (T) {
 
     it('must be read-only', function () {
       const expected = instance.statusText
-
       instance.statusText = 'something else'
-
       const actual = instance.statusText
 
       expect(actual).to.equal(expected)
@@ -58,7 +55,7 @@ function CommonTestSuite (T) {
 
     context('for a successful response', function () {
       it('must have the correct value even if something different is specified in the source XML', function () {
-        const testInstance = new T(SAMPLE_CXML.replace(/Status code="200" text="success"/, 'Status code="200" text="OK"'))
+        const testInstance = factory(SAMPLE_CXML.replace(/Status code="200" text="success"/, 'Status code="200" text="OK"'))
         const expected = 'success'
         const actual = testInstance.statusText
 
@@ -68,7 +65,7 @@ function CommonTestSuite (T) {
 
     context('for a non-successful response', function () {
       it('must have the correct value if there is no status description in the source XML', function () {
-        const testInstance = new T(FAILED_CXML.replace(/<Status code="400" text="Failure">.+<\/Status>/, '<Status code="400" text="Bad request"></Status>'))
+        const testInstance = factory(FAILED_CXML.replace(/<Status code="400" text="Failure">.+<\/Status>/, '<Status code="400" text="Bad request"></Status>'))
         const expected = 'Bad request'
         const actual = testInstance.statusText
 
@@ -76,7 +73,7 @@ function CommonTestSuite (T) {
       })
 
       it('must have the correct value if a status description is specified in the source XML', function () {
-        const testInstance = new T(FAILED_CXML)
+        const testInstance = factory(FAILED_CXML)
         const expected = 'XML document contained a doctype but failed validation.'
         const actual = testInstance.statusText
 

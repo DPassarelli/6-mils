@@ -4,11 +4,12 @@
  * A series of unit tests that are applicable to all outbound cXML message
  * objects.
  *
- * @param  {Function}   T   A constructor for the object under test.
+ * @param  {Function}   factory   A factory for creating new instances of the
+ *                                class under test.
  *
  * @return {undefined}
  */
-function CommonTestSuite (T) {
+function CommonTestSuite (factory) {
   describe('the "payloadId" property', function () {
     /**
        * A regular expression that describes the default format for the
@@ -18,35 +19,39 @@ function CommonTestSuite (T) {
     const PAYLOAD_ID = /^\d+\.\d+\.\w+@unknown$/
 
     it('must return the value passed into the constructor, if fully specified', function () {
-      const instance = new T({ payloadId: 'test-test.1.2.3@whoknowswhere' })
+      const instance = factory({ payloadId: 'test-test.1.2.3@whoknowswhere' })
       const expected = 'test-test.1.2.3@whoknowswhere'
       const actual = instance.payloadId
+
       expect(actual).to.equal(expected)
     })
 
     it('must return a valid value, if only the host is specified in the constructor', function () {
-      const instance = new T({ payloadId: '@whoknowswhere' })
+      const instance = factory({ payloadId: '@whoknowswhere' })
       const expected = /\S+@whoknowswhere$/
       const actual = instance.payloadId
+
       expect(actual).to.match(expected)
     })
 
     it('must return a valid value, if no value is specified in the constructor', function () {
-      const instance = new T({})
+      const instance = factory({})
       const actual = instance.payloadId
+
       expect(actual).to.match(PAYLOAD_ID)
     })
 
     it('must return a valid value, if a `null` value is specified in the constructor', function () {
-      const instance = new T({ payloadId: null })
+      const instance = factory({ payloadId: null })
       const actual = instance.payloadId
+
       expect(actual).to.match(PAYLOAD_ID)
     })
   })
 
   describe('the "version" property', function () {
     it('must have the correct value', function () {
-      const instance = new T()
+      const instance = factory()
 
       const expected = '1.2.045'
       const actual = instance.version
@@ -59,7 +64,7 @@ function CommonTestSuite (T) {
     let instance = null
 
     beforeEach(function () {
-      instance = new T()
+      instance = factory()
     })
 
     it('must exist', function () {
@@ -128,7 +133,7 @@ function CommonTestSuite (T) {
     let instance = null
 
     beforeEach(function () {
-      instance = new T()
+      instance = factory()
     })
 
     it('must exist', function () {
@@ -197,7 +202,7 @@ function CommonTestSuite (T) {
     let instance = null
 
     beforeEach(function () {
-      instance = new T()
+      instance = factory()
     })
 
     it('must exist', function () {
@@ -269,7 +274,7 @@ function CommonTestSuite (T) {
     let instance = null
 
     beforeEach(function () {
-      instance = new T()
+      instance = factory()
     })
 
     it('must exist', function () {
@@ -315,7 +320,7 @@ function CommonTestSuite (T) {
     let instance = null
 
     beforeEach(function () {
-      instance = new T()
+      instance = factory()
     })
 
     it('must be asynchronous', function (done) {
