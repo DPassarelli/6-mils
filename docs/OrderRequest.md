@@ -3,6 +3,13 @@
 An OrderRequest message is used to submit a purchase order to a supplier (or vendor). This can be done to fulfill the items previously selected in a PunchOut session, for example. Instances of this class can be used to construct the necessary XML, send it to the supplier's e-commerce site, and receive the XML response.
 
 
+## Current Limitations
+
+This library only supports order type of "regular" and request type "new". Releases against a master agreement or blanket purchase orders, or update or delete requests, are not yet implemented.
+
+Only a single ship-to address is currently supported. Future releases may add the ability to specify ship-to addresses on an item-by-item basis.
+
+
 ## General Notes
 
 Optional values are indicated by a `?` after the expected data type. If all of the keys are optional, then the parameter is as well (meaning, there is no need to pass an empty literal object).
@@ -29,7 +36,7 @@ const orderReq = new cxml.OrderRequest({ orderId: 'ABC123' })
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `orderDate` | {Date?\|String?} | The date and time that the order was placed. If specified as a string, it must be in [ISO 8601 format](https://www.w3.org/TR/NOTE-datetime). If missing, the current date and time will be used by default. |
+| `orderDate` | {Date?\|String?} | The date and time that the order was placed. If specified as a string, it must be in [ISO 8601 format][8601]. If missing, the current date and time will be used by default. |
 | `orderId` | {String} | Required. The identifier for the order that this cXML message represents. This is typically the purchase order (PO) number. |
 | `payloadId` | {String?} | See below. |
 
@@ -73,6 +80,15 @@ The identifier for the order that this cXML message represents. This is typicall
 `<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` (`orderID` attribute)
 
 
+### `orderType` {String}
+
+The type of purchase order that this cXML message represents. The only supported value at this time is `regular`. Read-only.
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` (`orderType` attribute)
+
+
 ### `payloadId` {String}
 
 The unique identifier for this cXML message. Read-only.
@@ -82,9 +98,18 @@ The unique identifier for this cXML message. Read-only.
 `<cXML>` (`payloadID` attribute)
 
 
+### `requestType` {String}
+
+The type of request that this cXML message represents. The only supported value at this time is `new`. Read-only.
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` (`type` attribute)
+
+
 ### `timestamp` {String}
 
-The date and time of the cXML transmission, which will be in [ISO 8601 format](https://www.w3.org/TR/NOTE-datetime). Read-only.
+The date and time of the cXML transmission, which will be in [ISO 8601 format][8601]. Read-only.
 
 **This property will not have a value until the `submit()` method is called.**
 
@@ -140,7 +165,7 @@ This value, if specified, must be a plain object. Each key will be used to popul
 
 ### `addItems` ⛓
 
-The same as `addItem`, except that this method accepts an array of items and is chainable.
+The same as `addItem`, except that this method accepts an array of `item`s and is chainable.
 
 #### Parameters
 
@@ -157,14 +182,83 @@ Sets the bill-to address, payment card information (optional), and tax (also opt
 
 | Name | Type | Notes |
 |------|------|-------|
-| `address` | {Object} | A plain object, with the keys listed below. |
-| `pcard` | {Object} | A plain object with keys `number` and `expiration`. 
+| `address` | {Object} | The physical billing address. |
+| `email` | {Object?} | The e-mail contact for billing. |
+| `phone` | {Object?} | The phone number for billing. |
+| `pcard` | {Object?} | The payment card. |
+| `tax` | {Object?} | Any tax calculated and paid for by the buyer. |
 
+#### `address`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's bill-to address. If this value is not present, then all others must be. |
+| `nickname` | {String?} | A moniker for the address being specified (such as "Home office" or "East warehouse"). |
+| `companyName` | {String} | The name of the company placing the order. |
+| `countryCode` | {String} | The ISO 3166 country code for the bill-to address. |
+| `street` | {String?} | The street number and name. |
+| `city` | {String?} | The city name. |
+| `state` | {String?} | The state name (or abbreviation, as appropriate). |
+| `postalCode` | {String?} | The postal (zip) code. |
+| `countryName` | {String?} | The name of the country. |
+
+**The unique identifier is a value that is determined between the buyer and supplier. If used, the supplier should specify whether any of the other fields are required.**
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<BillTo>` → `<Address>`
+
+#### `email`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `nickname` | {String?} | A moniker for the e-mail address being specified. Defaults to `default` if blank. |
+| `address` | {String} | The e-mail address itself. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<BillTo>` → `<Email>`
+
+#### `phone`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `nickname` | {String?} | A moniker for the phone number being specified. Defaults to `default` if blank. |
+| `countryCode` | {String} | The ITU calling code. |
+| `areaOrCityCode` | {String} | The area or city code. |
+| `number` | {String} | The local number. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<BillTo>` → `<Phone>`
+
+#### `pcard`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `number` | {String} | The payment card account number. |
+| `expiration` | {Date\|String} | If the value is a `Date`, then only the year and month are significant. If the value is a string, it must be in [ISO 8601 format][8601]. Either value will be converted into a string with the format `YYYY-MM-DD`, which will always be the last day of the specified month. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<Payment>`
+
+#### `tax`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `amount` | {Number} | The amount of tax to include in the order. |
+| `currency` | {String?} | The ISO 4217 currency code. The default value is `USD`. |
+| `description` | {String?} | An optional description of the tax. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<Tax>`
 
 
 ### `setBuyerInfo` ⛓
 
-Sets the credentials for the purchaser's organization (the one that the POSReq is being sent from).
+Sets the credentials for the purchaser's organization (the one that the OrderRequest is being sent from).
 
 #### Parameters
 
@@ -234,12 +328,81 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 
 
 ### `setShippingInfo` ⛓
-address and ship method
+
+Sets the ship-to address, and shipping method (optional).
+
+#### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `address` | {Object} | The physical address that the items should be shipped to. |
+| `email` | {Object?} | The e-mail associated with the recipient. |
+| `phone` | {Object?} | The phone number of the recipient. |
+| `method` | {Object?} | The requested shipping method. |
+
+#### `address`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's ship-to address. If this value is not present, then all others must be. |
+| `nickname` | {String?} | A moniker for the address being specified (such as "Home office" or "East warehouse"). |
+| `companyName` | {String} | The name of the company receiving the order. |
+| `countryCode` | {String} | The ISO 3166 country code for the ship-to address. |
+| `attentionOf` | {Array?\|String?} | One or more values that will be rendered as `<DeliverTo>` child elements. |
+| `street` | {String?} | The street number and name. |
+| `city` | {String?} | The city name. |
+| `state` | {String?} | The state name (or abbreviation, as appropriate). |
+| `postalCode` | {String?} | The postal (zip) code. |
+| `countryName` | {String?} | The name of the country. |
+
+**The unique identifier is a value that is determined between the buyer and supplier. If used, the supplier should specify whether any of the other fields are required.**
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<ShipTo>` → `<Address>`
+
+#### `email`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `nickname` | {String?} | A moniker for the e-mail address being specified. Defaults to `default` if blank. |
+| `address` | {String} | The e-mail address itself. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<ShipTo>` → `<Email>`
+
+#### `phone`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `nickname` | {String?} | A moniker for the phone number being specified. Defaults to `default` if blank. |
+| `countryCode` | {String} | The ITU calling code. |
+| `areaOrCityCode` | {String} | The area or city code. |
+| `number` | {String} | The local number. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<ShipTo>` → `<Phone>`
+
+#### `method`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `amount` | {Number} | The amount of shipping being paid. |
+| `currency` | {String?} | The ISO 4217 currency code. The default value is `USD`. |
+| `description` | {String?} | An optional description of the shipping method requested (such as the shipper's name and service, e.g. "FedEx 2-day"). |
+
+**The buyer should confirm with the shipper whether this information can be provided in the request, and what methods are available.**
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<Shipping>`
 
 
 ### `setSupplierInfo` ⛓
 
-Sets the credentials for the supplier's organization (the one that the POSReq is being sent to).
+Sets the credentials for the supplier's organization (the one that the OrderRequest is being sent to).
 
 #### Parameters
 
@@ -261,6 +424,28 @@ Sets the credentials for the supplier's organization (the one that the POSReq is
 `<cXML>` → `<Header>` → `<To>`
 
 
+### `setTotal` ⛓
+
+Sets the total amount (excluding shipping costs and taxes) for the purchase order. **This method is only required if the line items are not all the same currency.** If all of the line items are the same currency, then this value will be automatically computed.
+
+#### Parameters
+
+| Name | Type | Notes |
+|------|------|-------|
+| `options` | {Object} | A plain object having the keys listed below. |
+
+#### `options`
+
+| Key | Type | Notes |
+|-----|------|-------|
+| `amount` | {Number} | The total amount. |
+| `currency` | {String} | The ISO 4217 currency code. |
+
+#### Corresponding cXML Element
+
+`<cXML>` → `<Request>` → `<OrderRequest>` → `<OrderRequestHeader>` → `<Total>`
+
+
 ### `submit` {Promise}
 
 Initiates the transmission of the OrderRequest message to the supplier, at the specified URL.
@@ -273,7 +458,16 @@ Initiates the transmission of the OrderRequest message to the supplier, at the s
 
  The return value is an instance of `Promise`, which if successful, will resolve to an new instance of `OrderResponse`. Please refer to the documentation for that object type for more information.
 
-**The promise will only be rejected if there is a problem with the underlying HTTP transmission. The supplier may return a cXML message that indicates an error with the OrderRequest, or with their system, but this can only be determined by checking the properties of the returned `OrderResponse`.**
+#### Possible Reasons for Rejection
+
+This promise will be rejected if any of the following is true:
+
+* The line items have mixed `currency` values, but `setTotal` was not called.
+* The `orderID` value is blank.
+* There are no items in the order.
+* There is a problem with the underlying HTTP transmission when sending the cXML to the supplier.
+
+**Note that the promise will not be rejected if the HTTP transmission is successful; however, this does not necessarily indicate that that the purchase order (PO) was accepted by the supplier. You must check the status of the returned `OrderResponse` to verify a successful PO submission.**
 
 
 ### `toString` {String}
@@ -291,3 +485,5 @@ Returns the raw cXML of the underlying OrderRequest message. User-provided value
 | Key | Type | Notes |
 |-----|------|-------|
 | `format` | {Boolean?} | If `true`, then the cXML will be formatted with line breaks and indentation to make it human-readable. |
+
+[8601]: https://www.w3.org/TR/NOTE-datetime
