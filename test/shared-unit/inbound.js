@@ -15,15 +15,15 @@ function CommonTestSuite (factory) {
     const CTOR_ERR_MESSAGE = 'The "cxml" parameter is required and must be well-formed XML.'
 
     it('must throw an error if no parameter is provided', function () {
-      expect(factory('undefined')).to.throw(CTOR_ERR_MESSAGE)
+      expect(function () { factory('undefined') }).to.throw(CTOR_ERR_MESSAGE)
     })
 
     it('must throw an error if an empty string is provided', function () {
-      expect(factory('empty-string')).to.throw(CTOR_ERR_MESSAGE)
+      expect(function () { factory('empty-string') }).to.throw(CTOR_ERR_MESSAGE)
     })
 
     it('must throw an error if malformed XML is provided', function () {
-      expect(factory('<?xml version="1.0"?><cXM L DOCTYPE<</<')).to.throw(CTOR_ERR_MESSAGE)
+      expect(function () { factory('<?xml version="1.0"?><cXM L DOCTYPE<</<') }).to.throw(CTOR_ERR_MESSAGE)
     })
   })
 }
