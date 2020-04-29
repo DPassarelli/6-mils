@@ -54,10 +54,10 @@ _Examples:_
 
 | Code excerpt | Generated XML |
 |--------------|---------------|
-| `new OrderRequest()` or `new OrderRequest({ payloadId: null })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
-| `new OrderRequest({ payloadId: '@example.com' })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
-| `new OrderRequest({ payloadId: '12345.09876.foobar@example.com' })` | `<cXML payloadID="12345.09876.foobar@example.com"...` |
-| `new OrderRequest({ payloadId: '"></cXML>some malicious content' })` | `<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
+| `new OrderRequest({ orderId: '...' })` or `new OrderRequest({ orderId: '...', payloadId: null })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
+| `new OrderRequest({ orderId: '...', payloadId: '@example.com' })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
+| `new OrderRequest({ orderId: '...', payloadId: '12345.09876.foobar@example.com' })` | `<cXML payloadID="12345.09876.foobar@example.com"...` |
+| `new OrderRequest({ orderId: '...', payloadId: '"></cXML>some malicious content' })` | `<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
 
 
 ## Properties
