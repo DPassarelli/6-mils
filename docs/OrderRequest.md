@@ -182,6 +182,12 @@ Sets the bill-to address, payment card information (optional), and tax (also opt
 
 | Name | Type | Notes |
 |------|------|-------|
+| `options` | {Object} | A plain object, containing at least the `address` key. |
+
+#### `options`
+
+| Name | Type | Notes |
+|------|------|-------|
 | `address` | {Object} | The physical billing address. |
 | `email` | {Object?} | The e-mail contact for billing. |
 | `phone` | {Object?} | The phone number for billing. |
@@ -202,7 +208,7 @@ Sets the bill-to address, payment card information (optional), and tax (also opt
 | `postalCode` | {String?} | The postal (zip) code. |
 | `countryName` | {String?} | The name of the country. |
 
-**The unique identifier is a value that is determined between the buyer and supplier. If used, the supplier should specify whether any of the other fields are required.**
+**The unique identifier is a value that is determined between the buyer and supplier. If used, the supplier should specify whether any of the other optional values must also be provided.**
 
 #### Corresponding cXML Element
 
@@ -335,6 +341,12 @@ Sets the ship-to address, and shipping method (optional).
 
 | Name | Type | Notes |
 |------|------|-------|
+| `options` | {Object} | A plain object, containing at least the `address` key. |
+
+#### `options`
+
+| Name | Type | Notes |
+|------|------|-------|
 | `address` | {Object} | The physical address that the items should be shipped to. |
 | `email` | {Object?} | The e-mail associated with the recipient. |
 | `phone` | {Object?} | The phone number of the recipient. |
@@ -355,7 +367,7 @@ Sets the ship-to address, and shipping method (optional).
 | `postalCode` | {String?} | The postal (zip) code. |
 | `countryName` | {String?} | The name of the country. |
 
-**The unique identifier is a value that is determined between the buyer and supplier. If used, the supplier should specify whether any of the other fields are required.**
+**The unique identifier is a value that is determined between the buyer and supplier. If used, the supplier should specify whether any of the other optional values must also be provided.**
 
 #### Corresponding cXML Element
 
