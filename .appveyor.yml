@@ -3,6 +3,7 @@ image: Visual Studio 2017
 version: 0.5.0+{build}
 
 environment:
+  DEBUG: 6-mils:*
   matrix:
     - node_version: '12'
     - node_version: '10'
@@ -24,7 +25,7 @@ before_test:
 
 test_script:
   - npm run lint
-  - npx mocha --reporter mocha-junit-reporter "**/*.spec.js" test/functional/*
+  - npx mocha --reporter mocha-junit-reporter "./{,!(node_modules)/**/}*.spec.js" test/functional/*
   - pwsh: |
         $webClient = New-Object System.Net.WebClient
         $webClient.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test-results.xml))

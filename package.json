@@ -8,7 +8,7 @@
     "cover:report": "nyc report --reporter=text-lcov",
     "coverage": "npm run cover:test && npm run cover:report | coveralls",
     "lint": "standard",
-    "test:unit": "mocha \"**/*.spec.js\"",
+    "test:unit": "mocha \"./{,!(node_modules)/**/}*.spec.js\"",
     "test:func": "mocha test/functional/*",
     "test": "npm run lint && npm run cover:test"
   },
@@ -27,6 +27,9 @@
     "url": "https://github.com/DPassarelli/6-mils/issues"
   },
   "homepage": "https://github.com/DPassarelli/6-mils#readme",
+  "engines": {
+    "node" : ">=8"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -48,7 +51,6 @@
   },
   "mocha": {
     "reporter": "min",
-    "exclude": "node_modules/",
     "file": "test/setup.js",
     "ui": "bdd"
   },
