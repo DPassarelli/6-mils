@@ -1,0 +1,33 @@
+image: Visual Studio 2017
+
+version: 0.5.0+{build}
+
+environment:
+  DEBUG: 6-mils:*
+  matrix:
+    - node_version: '12'
+    - node_version: '10'
+    - node_version: '8'
+
+matrix:
+  fast_finish: true
+
+init:
+  - git config --global core.autocrlf true
+
+install:
+  - ps: Install-Product node $env:node_version
+
+before_test:
+  - npm --version
+  - npm install
+  - npm install mocha-junit-reporter
+
+test_script:
+  - npm run lint
+  - npx mocha --reporter mocha-junit-reporter "./{,!(node_modules)/**/}*.spec.js" test/functional/*
+  - pwsh: |
+        $webClient = New-Object System.Net.WebClient
+        $webClient.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test-results.xml))
+
+build: off
