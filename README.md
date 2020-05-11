@@ -5,9 +5,9 @@
 [![Coverage Status](https://img.shields.io/coveralls/github/DPassarelli/6-mils/master?logo=coveralls)](https://coveralls.io/github/DPassarelli/6-mils?branch=master)
 
 
-**A JS library for creating, sending, and parsing [cXML messages](http://cxml.org).**
+**A Node.js library for creating, sending, and parsing [cXML messages](http://cxml.org).**
 
-Adheres to the `standard` coding style (click below for more information):
+This project adheres to the `standard` coding style (click below for more information):
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard#javascript-standard-style)
 

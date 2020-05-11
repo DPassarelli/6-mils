@@ -176,7 +176,7 @@ The same as `addItem`, except that this method accepts an array of `item`s and i
 
 ### `setBillingInfo` ⛓
 
-Sets the bill-to address, payment card information (optional), and tax (also optional).
+Sets the bill-to address, purchasing card information (optional), and tax (also optional).
 
 #### Parameters
 
@@ -191,7 +191,7 @@ Sets the bill-to address, payment card information (optional), and tax (also opt
 | `address` | {Object} | The physical billing address. |
 | `email` | {Object?} | The e-mail contact for billing. |
 | `phone` | {Object?} | The phone number for billing. |
-| `pcard` | {Object?} | The payment card. |
+| `pcard` | {Object?} | The purchasing card. |
 | `tax` | {Object?} | Any tax calculated and paid for by the buyer. |
 
 #### `address`
@@ -242,7 +242,7 @@ Sets the bill-to address, payment card information (optional), and tax (also opt
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `number` | {String} | The payment card account number. |
+| `number` | {String} | The purchasing card account number. |
 | `expiration` | {Date\|String} | If the value is a `Date`, then only the year and month are significant. If the value is a string, it must be in [ISO 8601 format][8601]. Either value will be converted into a string with the format `YYYY-MM-DD`, which will always be the last day of the specified month. |
 
 #### Corresponding cXML Element
