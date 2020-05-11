@@ -50,19 +50,19 @@
             </Address>
           </ShipTo>
           <BillTo>
-            <Address isoCountryCode="{{ billTo.countryCode }}" addressID="{{ billTo.address.id }}">
-              <Name xml:lang="{{ language }}">{{ billTo.companyName }}</Name>
+            <Address addressID="{{ billTo.address.id }}">
+              <Name xml:lang="{{ language }}">{{ billTo.address.companyName }}</Name>
               <PostalAddress name="{{ billTo.address.nickname }}">
                 <Street>{{ billTo.address.street }}</Street>
                 <City>{{ billTo.address.city }}</City>
                 <State>{{ billTo.address.state }}</State>
                 <PostalCode>{{ billTo.address.postalCode }}</PostalCode>
-                <Country isoCountryCode="{{ billTo.countryCode }}">{{ billTo.address.country }}</Country>
+                <Country isoCountryCode="{{ billTo.address.countryCode }}">{{ billTo.address.countryName }}</Country>
               </PostalAddress>
               <Email name="{{ billTo.email.nickname }}">{{ billTo.email.address }}</Email>
               <Phone name="{{ billTo.phone.nickname }}">
                 <TelephoneNumber>
-                  <CountryCode isoCountryCode="{{ billTo.countryCode }}">{{ billTo.phone.countryCode }}</CountryCode>
+                  <CountryCode>{{ billTo.phone.countryCode }}</CountryCode>
                   <AreaOrCityCode>{{ billTo.phone.areaOrCityCode }}</AreaOrCityCode>
                   <Number>{{ billTo.phone.number }}</Number>
                 </TelephoneNumber>
