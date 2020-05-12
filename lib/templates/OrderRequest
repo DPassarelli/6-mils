@@ -27,26 +27,30 @@
             <Money currency="{{ order.total.currency }}">{{ order.total.amnt }}</Money>
           </Total>
           <ShipTo>
-            <Address isoCountryCode="{{ shipTo.countryCode }}" addressID="{{ shipTo.addressId }}">
-              <Name xml:lang="{{ language }}">{{ shipTo.companyName }}</Name>
+            <Address addressID="{{ shipTo.address.id }}">
+              <Name xml:lang="{{ language }}">{{ shipTo.address.companyName }}</Name>
               <PostalAddress name="{{ shipTo.address.nickname }}">
-                {% for value in shipTo.address.attentionOf %}
+                {% for value in shipTo.address.attn %}
                 <DeliverTo>{{ value }}</DeliverTo>
                 {% endfor %}
                 <Street>{{ shipTo.address.street }}</Street>
                 <City>{{ shipTo.address.city }}</City>
                 <State>{{ shipTo.address.state }}</State>
                 <PostalCode>{{ shipTo.address.postalCode }}</PostalCode>
-                <Country isoCountryCode="{{ shipTo.countryCode }}">{{ shipTo.address.country }}</Country>
+                <Country isoCountryCode="{{ shipTo.address.countryCode }}">{{ shipTo.address.countryName }}</Country>
               </PostalAddress>
+              {% if shipTo.email %}
               <Email name="{{ shipTo.email.nickname }}">{{ shipTo.email.address }}</Email>
+              {% endif %}
+              {% if shipTo.phone %}
               <Phone name="{{ shipTo.phone.nickname }}">
                 <TelephoneNumber>
-                  <CountryCode isoCountryCode="{{ shipTo.countryCode }}">{{ shipTo.phone.countryCode }}</CountryCode>
+                  <CountryCode>{{ shipTo.phone.countryCode }}</CountryCode>
                   <AreaOrCityCode>{{ shipTo.phone.areaOrCityCode }}</AreaOrCityCode>
                   <Number>{{ shipTo.phone.number }}</Number>
                 </TelephoneNumber>
               </Phone>
+              {% endif %}
             </Address>
           </ShipTo>
           <BillTo>
