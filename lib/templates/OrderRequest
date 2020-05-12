@@ -70,15 +70,20 @@
             </Address>
           </BillTo>
           <Shipping>
-            <Money currency="{{ order.shipping.currency }}">{{ order.shipping.amnt }}</Money>
+            <Money currency="{{ order.shipping.currency }}">{{ order.shipping.amount }}</Money>
             <Description xml:lang="{{ language }}">{{ order.shipping.description }}</Description>
           </Shipping>
+          {% if order.tax %}
           <Tax>
-            <Money currency="{{ order.tax.currency }}">{{ order.tax.amnt }}</Money>
+            <Money currency="{{ order.tax.currency }}">{{ order.tax.amount }}</Money>
             <Description xml:lang="{{ language }}">{{ order.tax.description }}</Description>
           </Tax>
+          {% endif %}
+          {% if order.pcard %}
           <Payment>
+            <PCard number="{{ order.pcard.acct }}" expiration="{{ order.pcard.exp }}"/>
           </Payment>
+          {% endif %}
           {% for key, value in extrinsics %}
           <Extrinsic name="{{ key }}">{{ value }}</Extrinsic>
           {% endfor %}

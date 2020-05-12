@@ -198,7 +198,7 @@ Sets the bill-to address, purchasing card information (optional), and tax (also 
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's bill-to address. If this value is not present, then all others must be. |
+| `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's bill-to address. If this value is not present, then all others should be. |
 | `nickname` | {String?} | A moniker for the address being specified (such as "Home office" or "East warehouse"). |
 | `companyName` | {String} | The name of the company placing the order. |
 | `countryCode` | {String?} | The ISO 3166 country code for the bill-to address. |
@@ -356,7 +356,7 @@ Sets the ship-to address, and shipping method (optional).
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's ship-to address. If this value is not present, then all others must be. |
+| `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's ship-to address. If this value is not present, then all others should be. |
 | `nickname` | {String?} | A moniker for the address being specified (such as "Home office" or "East warehouse"). |
 | `companyName` | {String} | The name of the company receiving the order. |
 | `countryCode` | {String} | The ISO 3166 country code for the ship-to address. |
