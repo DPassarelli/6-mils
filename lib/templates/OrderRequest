@@ -81,10 +81,12 @@
               {% endif %}
             </Address>
           </BillTo>
+          {% if order.shipping %}
           <Shipping>
             <Money currency="{{ order.shipping.currency }}">{{ order.shipping.amount }}</Money>
             <Description xml:lang="{{ language }}">{{ order.shipping.description }}</Description>
           </Shipping>
+          {% endif %}
           {% if order.tax %}
           <Tax>
             <Money currency="{{ order.tax.currency }}">{{ order.tax.amount }}</Money>
