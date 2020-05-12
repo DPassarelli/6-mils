@@ -51,7 +51,10 @@
           </ShipTo>
           <BillTo>
             <Address addressID="{{ billTo.address.id }}">
+              {% if billTo.address.companyName %}
               <Name xml:lang="{{ language }}">{{ billTo.address.companyName }}</Name>
+              {% endif %}
+              {% if billTo.address.street %}
               <PostalAddress name="{{ billTo.address.nickname }}">
                 <Street>{{ billTo.address.street }}</Street>
                 <City>{{ billTo.address.city }}</City>
@@ -59,7 +62,11 @@
                 <PostalCode>{{ billTo.address.postalCode }}</PostalCode>
                 <Country isoCountryCode="{{ billTo.address.countryCode }}">{{ billTo.address.countryName }}</Country>
               </PostalAddress>
+              {% endif %}
+              {% if billTo.email %}
               <Email name="{{ billTo.email.nickname }}">{{ billTo.email.address }}</Email>
+              {% endif %}
+              {% if billTo.phone %}
               <Phone name="{{ billTo.phone.nickname }}">
                 <TelephoneNumber>
                   <CountryCode>{{ billTo.phone.countryCode }}</CountryCode>
@@ -67,6 +74,7 @@
                   <Number>{{ billTo.phone.number }}</Number>
                 </TelephoneNumber>
               </Phone>
+              {% endif %}
             </Address>
           </BillTo>
           <Shipping>
