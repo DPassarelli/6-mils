@@ -24,7 +24,7 @@
     <OrderRequest>
         <OrderRequestHeader orderID="{{ order.id }}" orderDate="{{ order.date }}" type="{{ order.type }}">
           <Total>
-            <Money currency="{{ order.total.currency }}">{{ order.total.amnt }}</Money>
+            <Money currency="{{ total.currency }}">{{ total.amount }}</Money>
           </Total>
           <ShipTo>
             <Address addressID="{{ shipTo.address.id }}">
@@ -106,15 +106,15 @@
     {% for item in items %}
     <ItemOut quantity="{{ item.quantity }}" lineNumber="{{ item.lineNumber }}">
       <ItemID>
-        <SupplierPartID></SupplierPartID>
-        <SupplierPartAuxilaryID></SupplierPartAuxilaryID>
+        <SupplierPartID>{{ item.supplierPartId }}</SupplierPartID>
+        <SupplierPartAuxilaryID>{{ item.supplierPartAuxId }}</SupplierPartAuxilaryID>
       </ItemID>
       <ItemDetail>
         <UnitPrice>
-          <Money currency=""></Money>
+          <Money currency="{{ item.currency }}">{{ item.unitPrice }}</Money>
         </UnitPrice>
-        <Description></Description>
-        <UnitOfMeasure></UnitOfMeasure>
+        <Description>{{ item.name }}</Description>
+        <UnitOfMeasure>{{ item.uom }}</UnitOfMeasure>
         {% for key, value in item.classification %}
         <Classification domain="{{ key }}">{{ value }}</Classification>
         {% endfor %}
