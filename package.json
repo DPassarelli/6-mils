@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/DPassarelli/6-mils#readme",
   "engines": {
-    "node" : ">=8"
+    "node": ">=8"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -43,7 +43,7 @@
     "got": "^9.6.0",
     "is-plain-obj": "^2.1.0",
     "lodash.merge": "^4.6.2",
-    "moment": "^2.24.0",
+    "luxon": "^1.24.1",
     "nunjucks": "^3.2.1",
     "ulid": "^2.3.0",
     "whatwg-url": "^7.1.0",
