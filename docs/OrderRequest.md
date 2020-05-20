@@ -200,7 +200,7 @@ Sets the bill-to address, purchasing card information (optional), and tax (also 
 |-----|------|-------|
 | `id` | {String?} | A unique identifier that allows the supplier's system to "look up" the buyer's bill-to address. If this value is not present, then all others should be. |
 | `nickname` | {String?} | A moniker for the address being specified (such as "Home office" or "East warehouse"). |
-| `companyName` | {String?} | The name of the company placing the order. |
+| `companyName` | {String} | The name of the company placing the order. |
 | `countryCode` | {String?} | The ISO 3166 country code for the bill-to address. |
 | `street` | {String?} | The street number and name. |
 | `city` | {String?} | The city name. |

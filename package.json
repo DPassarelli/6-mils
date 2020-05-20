@@ -9,7 +9,7 @@
     "coverage": "npm run cover:test && npm run cover:report | coveralls",
     "lint": "standard",
     "test:unit": "mocha \"./{,!(node_modules)/**/}*.spec.js\"",
-    "test:func": "mocha test/functional/*",
+    "test:func": "mocha test/functional/harness.js",
     "test": "npm run lint && npm run cover:test"
   },
   "repository": {
@@ -36,7 +36,8 @@
     "coveralls": "^3.0.11",
     "mocha": "^7.1.1",
     "nyc": "^15.0.0",
-    "standard": "^14.3.3"
+    "standard": "^14.3.3",
+    "w3c-xml-validator": "^1.1.0"
   },
   "dependencies": {
     "debug": "^4.1.1",
