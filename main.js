@@ -1,7 +1,5 @@
-const PunchOutSetupRequest = require('./lib/PunchOutSetupRequest.js')
-const PunchOutOrderMessage = require('./lib/PunchOutOrderMessage.js')
-
 module.exports = Object.seal({
-  PunchOutSetupRequest: PunchOutSetupRequest,
-  PunchOutOrderMessage: PunchOutOrderMessage
+  PunchOutSetupRequest: require('./lib/PunchOutSetupRequest.js'),
+  PunchOutOrderMessage: require('./lib/PunchOutOrderMessage.js'),
+  OrderRequest: require('./lib/OrderRequest.js')
 })

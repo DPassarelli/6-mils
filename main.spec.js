@@ -19,5 +19,9 @@ describe('the "main" module', function () {
     it('must include "PunchOutOrderMessage"', function () {
       expect(T).to.have.property('PunchOutOrderMessage')
     })
+
+    it('must include "OrderRequest"', function () {
+      expect(T).to.have.property('OrderRequest')
+    })
   })
 })
