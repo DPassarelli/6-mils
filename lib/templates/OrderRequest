@@ -22,7 +22,7 @@
   </Header>
   <Request>
     <OrderRequest>
-        <OrderRequestHeader orderID="{{ order.id }}" orderDate="{{ order.date }}" type="{{ order.type }}">
+        <OrderRequestHeader orderID="{{ id }}" orderDate="{{ date }}" orderType="{{ orderType }}" type="{{ requestType }}">
           <Total>
             <Money currency="{{ total.currency }}">{{ total.amount }}</Money>
           </Total>
@@ -102,24 +102,24 @@
           <Extrinsic name="{{ key }}">{{ value }}</Extrinsic>
           {% endfor %}
         </OrderRequestHeader>
-    </OrderRequest>
-    {% for item in items %}
-    <ItemOut quantity="{{ item.quantity }}" lineNumber="{{ item.lineNumber }}">
-      <ItemID>
-        <SupplierPartID>{{ item.supplierPartId }}</SupplierPartID>
-        <SupplierPartAuxilaryID>{{ item.supplierPartAuxId }}</SupplierPartAuxilaryID>
-      </ItemID>
-      <ItemDetail>
-        <UnitPrice>
-          <Money currency="{{ item.currency }}">{{ item.unitPrice }}</Money>
-        </UnitPrice>
-        <Description>{{ item.name }}</Description>
-        <UnitOfMeasure>{{ item.uom }}</UnitOfMeasure>
-        {% for key, value in item.classification %}
-        <Classification domain="{{ key }}">{{ value }}</Classification>
+        {% for item in items %}
+        <ItemOut quantity="{{ item.quantity }}" lineNumber="{{ item.lineNumber }}">
+          <ItemID>
+            <SupplierPartID>{{ item.supplierPartId }}</SupplierPartID>
+            <SupplierPartAuxiliaryID>{{ item.supplierPartAuxId }}</SupplierPartAuxiliaryID>
+          </ItemID>
+          <ItemDetail>
+            <UnitPrice>
+              <Money currency="{{ item.currency }}">{{ item.unitPrice }}</Money>
+            </UnitPrice>
+            <Description xml:lang="{{ language }}">{{ item.name }}</Description>
+            <UnitOfMeasure>{{ item.uom }}</UnitOfMeasure>
+            {% for key, value in item.classification %}
+            <Classification domain="{{ key }}">{{ value }}</Classification>
+            {% endfor %}
+          </ItemDetail>
+        </ItemOut>
         {% endfor %}
-      </ItemDetail>
-    </ItemOut>
-    {% endfor %}
+    </OrderRequest>
   </Request>
 </cXML>
