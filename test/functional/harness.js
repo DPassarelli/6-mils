@@ -245,7 +245,10 @@ describe('end-to-end tests', function () {
         supplierPartId: 'TEST123',
         unitPrice: 0.99,
         currency: 'USD',
-        uom: 'EA'
+        uom: 'EA',
+        classification: {
+          UNISPEC: 'test-123'
+        }
       })
 
       order.setBillingInfo({

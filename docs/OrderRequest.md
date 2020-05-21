@@ -143,7 +143,7 @@ Adds a line item to the purchase order. Typically, the values for each item (suc
 
 | Key | Type | Notes |
 |-----|------|-------|
-| `classification` | {Object?} | See notes below. |
+| `classification` | {Object} | See notes below. |
 | `currency` | {String} | The ISO 4217 currency code for `unitPrice`. |
 | `name` | {String} | The name of the item. |
 | `quantity` | {Number} | The number of units being ordered. |
@@ -154,7 +154,7 @@ Adds a line item to the purchase order. Typically, the values for each item (suc
 
 #### `classification`
 
-This value, if specified, must be a plain object. Each key will be used to populate the `domain` attribute of a `<Classification>` child element, and the value will be used for the text of the element. For example,
+This value must be a plain object. Each key will be used to populate the `domain` attribute of a `<Classification>` child element, and the value will be used for the text of the element. For example,
 
 `classification: { UNSPSC: '5136030000' }` → `<Classification domain="UNSPSC">5136030000</Classification>`
 
