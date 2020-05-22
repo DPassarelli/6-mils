@@ -46,7 +46,7 @@ An optional value to insert into the `payloadID` attribute of the `<cXML>` (root
 
 > A unique number with respect to space and time, used for logging purposes to identify documents that might have been lost or had problems. This value should not change for retry attempts. The recommended implementation is: datetime.process id.random number@hostname
 
-If this value is empty or missing, one will be created automatically with the hostname `unknown`.
+If this value is empty or missing, one will be created automatically with the hostname `@6-mils`.
 
 If this value starts with `@`, then that will be used as the hostname. If it starts with any other printable character, then it will be used as the entire payload ID.
 

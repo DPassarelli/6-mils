@@ -12,11 +12,11 @@
 function CommonTestSuite (factory) {
   describe('the "payloadId" property', function () {
     /**
-       * A regular expression that describes the default format for the
-       * "payloadId" property value.
-       * @type {RegExp}
-       */
-    const PAYLOAD_ID = /^\d+\.\d+\.\w+@unknown$/
+     * A regular expression that describes the default format for the
+     * "payloadId" property value.
+     * @type {RegExp}
+     */
+    const PAYLOAD_ID = /^\d+\.\d+\.\w+@6-mils$/
 
     it('must return the value passed into the constructor, if fully specified', function () {
       const instance = factory({ payloadId: 'test-test.1.2.3@whoknowswhere' })

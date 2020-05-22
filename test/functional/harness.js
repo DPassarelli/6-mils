@@ -4,6 +4,7 @@ const validate = require('w3c-xml-validator')
 
 const localServer = require('./lib/local-cxml-server.js')
 const getAttributeValue = require('./lib/find-parse-attribute.js')
+
 /**
  * Code under test.
  * @type {any}
@@ -11,8 +12,8 @@ const getAttributeValue = require('./lib/find-parse-attribute.js')
 const cxml = require('../../main.js')
 
 /**
- * [localServer description]
- * @type {[type]}
+ * An HTTP server listening on localhost to respond to cXML requests.
+ * @type {Object}
  */
 let server = null
 
@@ -390,8 +391,74 @@ describe('end-to-end tests', function () {
       })
     })
 
-    context('empty', function () {})
-    context('failure', function () {})
-    context('timeout', function () {})
+    context('empty', function () {
+      /**
+       * The response to the order request.
+       * @type {Object}
+       */
+      let orderResponse = null
+
+      /**
+       * The approximate time (in milliseconds since epoch) that the
+       * OrderResponse was received from the remote server.
+       * @type {Number}
+       */
+      let timeOfResponse = null
+
+      /**
+       * A regular expression that describes the default format for the
+       * "payloadId" property value.
+       * @type {RegExp}
+       */
+      const PAYLOAD_ID = /^\d+\.\d+\.\w+@6-mils$/
+
+      before(() => {
+        const order = OrderRequestFactory()
+
+        return order.submit(`${server.baseUrl}/order/empty`)
+          .then(function (res) {
+            timeOfResponse = Date.now()
+            orderResponse = res
+          })
+      })
+
+      describe('the OrderResponse object', function () {
+        it('must have the correct value for "payloadId"', function () {
+          expect(orderResponse.payloadId).to.match(PAYLOAD_ID)
+        })
+
+        it('must have a valid timestamp', function () {
+          /**
+           * The timestamp is expected to correspond to when the OrderResponse
+           * was sent out.
+           */
+          const timestamp = new Date(orderResponse.timestamp)
+          const delta = Math.abs(timestamp.getTime() - timeOfResponse)
+
+          expect(delta).to.be.lessThan(20)
+        })
+
+        it('must have the correct value for "version"', function () {
+          const expected = '1.2.045'
+          const actual = orderResponse.version
+
+          expect(actual).to.equal(expected)
+        })
+
+        it('must have the correct value for "statusCode"', function () {
+          const expected = '200'
+          const actual = orderResponse.statusCode
+
+          expect(actual).to.equal(expected)
+        })
+
+        it('must have the correct value for "statusText"', function () {
+          const expected = 'success'
+          const actual = orderResponse.statusText
+
+          expect(actual).to.equal(expected)
+        })
+      })
+    })
   })
 })

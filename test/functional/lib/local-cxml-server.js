@@ -44,10 +44,10 @@ class CxmlServer extends EventEmitter {
     self.listener = http.createServer((req, res) => {
       const requestBody = []
 
-      req.on('data', (chunk) => { requestBody.push(chunk.toString()) })
+      req.on('data', (chunk) => { requestBody.push(chunk) })
 
       req.on('end', () => {
-        self.emit('request', requestBody.join(''))
+        self.emit('request', Buffer.concat(requestBody).toString())
 
         switch (req.url) {
           case '/posr/success':
