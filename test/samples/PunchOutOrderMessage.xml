@@ -43,6 +43,21 @@
           <LeadTime>12</LeadTime>
         </ItemDetail>
       </ItemIn>
+      <ItemIn quantity="1">
+        <ItemID>
+          <SupplierPartID>4444</SupplierPartID>
+          <SupplierPartAuxiliaryID>E000028901</SupplierPartAuxiliaryID>
+        </ItemID>
+        <ItemDetail>
+          <UnitPrice>
+            <Money currency="EUR">227,34</Money>
+          </UnitPrice>
+          <Description xml:lang="en">Leather Reclining Desk Chair without Padded Arms</Description>
+          <UnitOfMeasure>EA</UnitOfMeasure>
+          <Classification domain="UNSPSC">5136030000</Classification>
+          <LeadTime>12</LeadTime>
+        </ItemDetail>
+      </ItemIn>
     </PunchOutOrderMessage>
   </Message>
 </cXML>
