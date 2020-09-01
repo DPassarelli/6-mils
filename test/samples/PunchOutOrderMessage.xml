@@ -43,6 +43,21 @@
           <LeadTime>12</LeadTime>
         </ItemDetail>
       </ItemIn>
+      <ItemIn quantity="3">
+        <ItemID>
+          <SupplierPartID>5555</SupplierPartID>
+          <SupplierPartAuxiliaryID>E000028901</SupplierPartAuxiliaryID>
+        </ItemID>
+        <ItemDetail>
+          <UnitPrice>
+            <Money currency="USD">254.40</Money>
+          </UnitPrice>
+          <Description xml:lang="en">Leather Reclining Desk Chair with Padded Arms</Description>
+          <UnitOfMeasure>EA</UnitOfMeasure>
+          <Classification domain="UNSPSC">5136030000</Classification>
+          <LeadTime>12</LeadTime>
+        </ItemDetail>
+      </ItemIn>
     </PunchOutOrderMessage>
   </Message>
 </cXML>
