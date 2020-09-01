@@ -27,7 +27,7 @@
           <Money currency="USD">763.20</Money>
         </Total>
       </PunchOutOrderMessageHeader>
-      <ItemIn quantity="3">
+      <ItemIn quantity="1">
         <ItemID>
           <SupplierPartID>5555</SupplierPartID>
           <SupplierPartAuxiliaryID>E000028901</SupplierPartAuxiliaryID>
@@ -43,7 +43,7 @@
           <LeadTime>12</LeadTime>
         </ItemDetail>
       </ItemIn>
-      <ItemIn quantity="3">
+      <ItemIn quantity="2">
         <ItemID>
           <SupplierPartID>5555</SupplierPartID>
           <SupplierPartAuxiliaryID>E000028901</SupplierPartAuxiliaryID>
