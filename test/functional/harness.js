@@ -28,7 +28,7 @@ after((done) => {
 })
 
 describe('end-to-end tests', function () {
-  this.timeout(8000)
+  this.timeout(10000)
 
   describe('the PunchOutRequest/Response cycle', function () {
     context('success', function () {
