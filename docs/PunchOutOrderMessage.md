@@ -135,3 +135,16 @@ The total amount (of units and costs) from the shopping cart. Returns a dictiona
 ### `version` {String}
 
 The version of the cXML protocol used to generate the PunchOutOrderMessage. This is extracted from the referenced DTD. Read-only.
+
+
+## Methods
+
+### `query(xpath)` {String}
+
+| Parameter | Type | Notes |
+|-----------|------|-------|
+| `xpath`   | {String} | A valid XPath expression. |
+
+This method will return the string value of the data pointed to by the given XPath expression. If the XPath expression does not resolve, then an empty string will be returned. An invalid XPath expression will cause the method to throw an `Error`.
+
+**At this time, `query()` only returns string values.** Keep this in mind if you use an XPath expression that could return multiple nodes, or numeric values, etc. Everything will be coerced into a single string value.
