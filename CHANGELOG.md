@@ -8,11 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 Although it doesn't affect the version number, the library has undergone a major refactorization, which should make future maintenance easier. It also brought in a couple of new features 🙌 
 
-# Added
+### Added
 
 * Instances of `PunchOutOrderMessage` now have a `query()` method that allows the source cXML to be directly queried through the use of XPath expressions. This provides access to data that is not otherwise exposed through the limited set of property getters. Please refer to the documentation for more information about this new method.
 
-* Instances of `PunchOutSetupRequest` and `OrderRequest` now emit events that provide visibility into the cXML that is sent and received from suppliers. This may be useful for logging or trouble-shooting. Please refer to the documentation for more information about this new events.
+* Instances of `PunchOutSetupRequest` and `OrderRequest` now emit events that provide visibility into the cXML that is sent and received from suppliers. This may be useful for logging or trouble-shooting. Please refer to the documentation for more information about these new events.
 
 ## [1.0.1] - 2020-09-01
 
