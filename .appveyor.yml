@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 
-version: 1.0.1+{build}
+version: 1.1.0+{build}
 
 environment:
   DEBUG: 6-mils:*
@@ -21,7 +21,7 @@ install:
 before_test:
   - npm --version
   - npm install
-  - npm install mocha-junit-reporter
+  - npm install mocha-junit-reporter@2
 
 test_script:
   - npm run lint
