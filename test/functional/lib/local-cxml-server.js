@@ -15,25 +15,37 @@ let server = null
  * The contents of a successful PunchOut Setup Response (POSRes).
  * @type {String}
  */
-const POSR_SUCCESS_CONTENT = fs.readFileSync(path.join(__dirname, '../../samples/PunchOutSetupResponse.xml')).toString()
+const POSR_SUCCESS_CONTENT = fs
+  .readFileSync(path.join(__dirname, '../../samples/PunchOutSetupResponse.xml'))
+  .toString()
+  .replace(/>\s+</g, '><')
 
 /**
  * The contents of a failed (non-successful) POSRes.
  * @type {String}
  */
-const POSR_FAILURE_CONTENT = fs.readFileSync(path.join(__dirname, '../../samples/PunchOutSetupResponse-400.xml')).toString()
+const POSR_FAILURE_CONTENT = fs
+  .readFileSync(path.join(__dirname, '../../samples/PunchOutSetupResponse-400.xml'))
+  .toString()
+  .replace(/>\s+</g, '><')
 
 /**
  * The contents of a successful Order Response (ORes).
  * @type {String}
  */
-const ORES_SUCCESS_CONTENT = fs.readFileSync(path.join(__dirname, '../../samples/OrderResponse.xml')).toString()
+const ORES_SUCCESS_CONTENT = fs
+  .readFileSync(path.join(__dirname, '../../samples/OrderResponse.xml'))
+  .toString()
+  .replace(/>\s+</g, '><')
 
 /**
  * The contents of a failed (non-successful) ORes.
  * @type {String}
  */
-const ORES_FAILURE_CONTENT = fs.readFileSync(path.join(__dirname, '../../samples/OrderResponse-400.xml')).toString()
+const ORES_FAILURE_CONTENT = fs
+  .readFileSync(path.join(__dirname, '../../samples/OrderResponse-400.xml'))
+  .toString()
+  .replace(/>\s+</g, '><')
 
 class CxmlServer extends EventEmitter {
   constructor () {

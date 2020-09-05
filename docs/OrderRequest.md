@@ -503,10 +503,10 @@ Returns the raw cXML of the underlying OrderRequest message. User-provided value
 
 ### `sending` {String}
 
-This event will be emitted just before the PunchOutSetupRequest message is sent to the supplier. The data provided will be the raw XML that comprises the body of the HTTP request being POSTed to the  URL specified in the `submit` method.
+This event will be emitted just before the OrderRequest message is sent to the supplier. The data provided will be the raw XML that comprises the body of the HTTP request being POSTed to the  URL specified in the `submit` method.
 
 ### `received` {String}
 
-This event will be emitted just before the Promise returned by `submit` is resolved, after the PunchOutSetupResponse message is received from the supplier. The data provided will be the raw XML that comprises the body of the HTTP response.
+This event will be emitted just before the Promise returned by `submit` is resolved, after the OrderResponse message is received from the supplier. The data provided will be the raw XML that comprises the body of the HTTP response.
 
 [8601]: https://www.w3.org/TR/NOTE-datetime

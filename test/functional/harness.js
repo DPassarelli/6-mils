@@ -46,13 +46,22 @@ describe('end-to-end tests', function () {
       let requestBody = null
 
       /**
+       * The data emitted by events (key -> event name, value -> data).
+       * @type {Object}
+       */
+      const eventData = {}
+
+      /**
        * The response to the PunchOut setup request.
        * @type {Object}
        */
       let posres = null
 
-      before(() => {
+      before(function () {
         const posreq = new cxml.PunchOutSetupRequest()
+
+        posreq.once('sending', (data) => { eventData.sending = data })
+        posreq.once('received', (data) => { eventData.received = data })
 
         posreq
           .setBuyerInfo({ domain: 'DUNS', id: '987654' })
@@ -91,6 +100,13 @@ describe('end-to-end tests', function () {
               expect(result.isValid).to.equal(true)
             })
         })
+
+        it('must be published in the "sending" event', function () {
+          const expected = requestBody
+          const actual = eventData.sending
+
+          expect(actual).to.equal(expected)
+        })
       })
 
       describe('the PunchOutSetupResponse object', function () {
@@ -128,30 +144,58 @@ describe('end-to-end tests', function () {
 
           expect(actual).to.equal(expected)
         })
+
+        it('must have the same source as was published in the "received" event', function () {
+          const expected = posres.toString()
+          const actual = eventData.received
+          expect(actual).to.equal(expected)
+        })
       })
     })
 
     context('failure', function () {
-      describe('the PunchOutSetupResponse object', function () {
-        /**
-         * The response to the PunchOut setup request.
-         * @type {Object}
-         */
-        let posres = null
+      /**
+       * The data emitted by events (key -> event name, value -> data).
+       * @type {Object}
+       */
+      const eventData = {}
 
-        before(() => {
-          const posreq = new cxml.PunchOutSetupRequest()
+      /**
+       * The PunchOut setup request.
+       * @type {Object}
+       */
+      const posreq = new cxml.PunchOutSetupRequest()
 
-          return posreq
-            .setBuyerInfo({ domain: 'DUNS', id: '987654' })
-            .setSupplierInfo({ domain: 'DUNS', id: '123456' })
-            .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
-            .submit(`${server.baseUrl}/posr/failure`)
-            .then(function (res) {
-              posres = res
-            })
+      /**
+       * The response to the PunchOut setup request.
+       * @type {Object}
+       */
+      let posres = null
+
+      before(function () {
+        posreq.once('sending', (data) => { eventData.sending = data })
+        posreq.once('received', (data) => { eventData.received = data })
+
+        return posreq
+          .setBuyerInfo({ domain: 'DUNS', id: '987654' })
+          .setSupplierInfo({ domain: 'DUNS', id: '123456' })
+          .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
+          .submit(`${server.baseUrl}/posr/failure`)
+          .then(function (res) {
+            posres = res
+          })
+      })
+
+      describe('the outgoing request', function () {
+        it('must be published in the "sending" event', function () {
+          const expected = posreq.toString()
+          const actual = eventData.sending
+
+          expect(actual).to.equal(expected)
         })
+      })
 
+      describe('the PunchOutSetupResponse object', function () {
         it('must have the correct value for "payloadId"', function () {
           const expected = '933634634590'
           const actual = posres.payloadId
@@ -186,47 +230,125 @@ describe('end-to-end tests', function () {
 
           expect(actual).to.equal(expected)
         })
+
+        it('must have the same source as was published in the "received" event', function () {
+          const expected = posres.toString()
+          const actual = eventData.received
+          expect(actual).to.equal(expected)
+        })
       })
     })
 
     context('with a timeout', function () {
-      it('must be rejected', function (done) {
+      /**
+       * The data emitted by events (key -> event name, value -> data).
+       * @type {Object}
+       */
+      const eventData = {}
+
+      /**
+       * The PunchOut setup request.
+       * @type {Object}
+       */
+      const posreq = new cxml.PunchOutSetupRequest()
+
+      /**
+       * A value indicating whether the "submit" method returned a Promise that
+       * was resolved or rejected.
+       * @type {String}
+       */
+      let result = ''
+
+      before(function () {
         /**
-           * In order to simulate a timeout, a request is made against an (assumed)
-           * unbound port.
-           */
+         * In order to simulate a timeout, a request is made against an (assumed)
+         * unbound port.
+         */
         const originalPortNumber = global.parseInt(/\d+$/.exec(server.baseUrl)[0])
         const newBaseUrl = server.baseUrl.replace(originalPortNumber, (originalPortNumber + 1).toString())
 
-        console.log('Submitting timeout request to %s', newBaseUrl)
+        posreq.once('sending', (data) => { eventData.sending = data })
+        posreq.once('received', (data) => { eventData.received = data })
 
-        const posreq = new cxml.PunchOutSetupRequest()
-
-        posreq
+        return posreq
           .setBuyerInfo({ domain: 'DUNS', id: '987654' })
           .setSupplierInfo({ domain: 'DUNS', id: '123456' })
           .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
           .submit(`${newBaseUrl}/posr/timeout`)
-          .then(function (response) {
-            done(new Error('The promise was not rejected'))
-          })
-          .catch(() => { done() })
+          .then((response) => { result = 'resolved' })
+          .catch(() => { result = 'rejected' })
+      })
+
+      describe('the outgoing request', function () {
+        it('must be published in the "sending" event', function () {
+          const expected = posreq.toString()
+          const actual = eventData.sending
+
+          expect(actual).to.equal(expected)
+        })
+
+        it('must not have emitted a "received" event', function () {
+          expect(eventData).to.not.have.property('received')
+        })
+      })
+
+      describe('the result', function () {
+        it('must be rejected', function () {
+          expect(result).to.equal('rejected')
+        })
       })
     })
 
     context('with an HTTP error', function () {
-      it('must be rejected', function (done) {
-        const posreq = new cxml.PunchOutSetupRequest()
+      /**
+       * The data emitted by events (key -> event name, value -> data).
+       * @type {Object}
+       */
+      const eventData = {}
 
-        posreq
+      /**
+       * The PunchOut setup request.
+       * @type {Object}
+       */
+      const posreq = new cxml.PunchOutSetupRequest()
+
+      /**
+       * A value indicating whether the "submit" method returned a Promise that
+       * was resolved or rejected.
+       * @type {String}
+       */
+      let result = ''
+
+      before(function () {
+        posreq.once('sending', (data) => { eventData.sending = data })
+        posreq.once('received', (data) => { eventData.received = data })
+
+        return posreq
           .setBuyerInfo({ domain: 'DUNS', id: '987654' })
           .setSupplierInfo({ domain: 'DUNS', id: '123456' })
           .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
           .submit(`${server.baseUrl}/posr/500`)
-          .then(function (response) {
-            done(new Error('The promise was not rejected'))
-          })
-          .catch(() => { done() })
+          .then((response) => { result = 'resolved' })
+          .catch(() => { result = 'rejected' })
+      })
+
+      describe('the outgoing request', function () {
+        it('must be published in the "sending" event', function () {
+          const expected = posreq.toString()
+          const actual = eventData.sending
+
+          expect(actual).to.equal(expected)
+        })
+
+        it('must not have emitted a "received" event', function () {
+          expect(eventData).to.not.have.property('received')
+        })
+      })
+
+      describe('the result', function () {
+        it('must be rejected', function () {
+          expect(result).to.equal('rejected')
+        })
       })
     })
   })
@@ -304,7 +426,7 @@ describe('end-to-end tests', function () {
        */
       let orderResponse = null
 
-      before(() => {
+      before(function () {
         const order = OrderRequestFactory()
         timeOfInstantiation = Date.now()
 
@@ -391,7 +513,19 @@ describe('end-to-end tests', function () {
       })
     })
 
-    context('empty', function () {
+    context('with an empty response body', function () {
+      /**
+       * The data emitted by events (key -> event name, value -> data).
+       * @type {Object}
+       */
+      const eventData = {}
+
+      /**
+       * [orderRequest description]
+       * @type {Object}
+       */
+      const orderRequest = OrderRequestFactory()
+
       /**
        * The response to the order request.
        * @type {Object}
@@ -412,14 +546,31 @@ describe('end-to-end tests', function () {
        */
       const PAYLOAD_ID = /^\d+\.\d+\.\w+@6-mils$/
 
-      before(() => {
-        const order = OrderRequestFactory()
+      before(function () {
+        orderRequest.once('sending', (data) => { eventData.sending = data })
+        orderRequest.once('received', (data) => { eventData.received = data })
 
-        return order.submit(`${server.baseUrl}/order/empty`)
+        return orderRequest.submit(`${server.baseUrl}/order/empty`)
           .then(function (res) {
             timeOfResponse = Date.now()
             orderResponse = res
           })
+      })
+
+      describe('the "sending" event', function () {
+        it('must be emitted with the same value as the request body', function () {
+          const expected = orderRequest.toString()
+          const actual = eventData.sending
+          expect(actual).to.equal(expected)
+        })
+      })
+
+      describe('the "received" event', function () {
+        it('must be emitted with an empty string', function () {
+          const expected = ''
+          const actual = eventData.received
+          expect(actual).to.equal(expected)
+        })
       })
 
       describe('the OrderResponse object', function () {
