@@ -45,10 +45,10 @@ _Examples:_
 
 | Code excerpt | Generated XML |
 |--------------|---------------|
-| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@unknown"...` |
+| `new PunchOutSetupRequest()` or `new PunchOutSetupRequest({ payloadId: null })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@6-mils"...` |
 | `new PunchOutSetupRequest({ payloadId: '@example.com' })` | `<cXML payloadID="1585421431623.6245.0VYD2K626M@example.com"...` |
 | `new PunchOutSetupRequest({ payloadId: '12345.09876.foobar@example.com' })` | `<cXML payloadID="12345.09876.foobar@example.com"...` |
-| `new PunchOutSetupRequest({ payloadId: '"></cXML>some malicious content' })` | `<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@unknown"...` |
+| `new PunchOutSetupRequest({ payloadId: '"></cXML>some malicious content' })` | `<cXML payloadID="&quot;&gt;&lt;/cXML&gt;some malicious content@6-mils"...` |
 
 
 ## Properties
