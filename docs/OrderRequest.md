@@ -279,7 +279,7 @@ Sets the credentials for the purchaser's organization (the one that the OrderReq
 | `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
 | `id` | {String?} | The value to insert into the `<Identity>` child element. |
 
-**Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
+**Note:** attempting to pass `null` or `undefined` values for either `domain` or `id` will throw an error. This is to prevent typographical bugs or other mistakes from slipping by silently. If you wish to clear a value that was set previously, then pass an empty string.
 
 #### Corresponding cXML Element
 
@@ -326,7 +326,7 @@ Sets the credentials for the sending entity (either `6-mils` or a network relay)
 | `secret` | {String?} | The value to insert into the `<SharedSecret>` element. |
 | `ua` | {String?} | The value to insert into the `<UserAgent>` element. If not specified, the default value is the name and version number of this module. |
 
-**Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
+**Note:** attempting to pass `null` or `undefined` values for either `domain`, `id`, or `secret` will throw an error. This is to prevent typographical bugs or other mistakes from slipping by silently. If you wish to clear a value that was set previously, then pass an empty string.
 
 #### Corresponding cXML Element
 
@@ -429,7 +429,7 @@ Sets the credentials for the supplier's organization (the one that the OrderRequ
 | `domain` | {String?} | The value to insert into the `domain` attribute of the `<Credential>` element. |
 | `id` | {String?} | The value to insert into the `<Identity>` child element. |
 
-**Note:** `null` values will be converted into empty strings. Missing values are ignored, and if not otherwise specified, default to empty strings.
+**Note:** attempting to pass `null` or `undefined` values for either `domain` or `id` will throw an error. This is to prevent typographical bugs or other mistakes from slipping by silently. If you wish to clear a value that was set previously, then pass an empty string.
 
 #### Corresponding cXML Element
 

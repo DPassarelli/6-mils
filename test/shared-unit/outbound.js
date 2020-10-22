@@ -97,18 +97,16 @@ function CommonTestSuite (factory) {
       expect(actual).to.match(expected)
     })
 
-    it('must convert missing values to empty strings', function () {
-      const expected = new RegExp('<From><Credential domain=""><Identity></Identity></Credential></From>')
-      const actual = instance.setBuyerInfo({}).toString()
-
-      expect(actual).to.match(expected)
+    it('must not accept undefined values', function () {
+      expect(() => {
+        instance.setBuyerInfo({ domain: undefined })
+      }).to.throw('Cannot provide null or undefined values to "setBuyerInfo". Please make sure you are passing valid data for both "domain" and "id", or simply exclude those which do not need to be updated.')
     })
 
-    it('must convert null values to empty strings', function () {
-      const expected = new RegExp('<From><Credential domain=""><Identity></Identity></Credential></From>')
-      const actual = instance.setBuyerInfo({ domain: null, id: null }).toString()
-
-      expect(actual).to.match(expected)
+    it('must not accept null values', function () {
+      expect(() => {
+        instance.setBuyerInfo({ id: null })
+      }).to.throw('Cannot provide null or undefined values to "setBuyerInfo". Please make sure you are passing valid data for both "domain" and "id", or simply exclude those which do not need to be updated.')
     })
 
     it('must convert non-string values to strings', function () {
@@ -166,18 +164,16 @@ function CommonTestSuite (factory) {
       expect(actual).to.match(expected)
     })
 
-    it('must convert missing values to empty strings', function () {
-      const expected = new RegExp('<To><Credential domain=""><Identity></Identity></Credential></To>')
-      const actual = instance.setSupplierInfo({}).toString()
-
-      expect(actual).to.match(expected)
+    it('must not accept undefined values', function () {
+      expect(() => {
+        instance.setSupplierInfo({ domain: undefined })
+      }).to.throw('Cannot provide null or undefined values to "setSupplierInfo". Please make sure you are passing valid data for both "domain" and "id", or simply exclude those which do not need to be updated.')
     })
 
-    it('must convert null values to empty strings', function () {
-      const expected = new RegExp('<To><Credential domain=""><Identity></Identity></Credential></To>')
-      const actual = instance.setSupplierInfo({ domain: null, id: null }).toString()
-
-      expect(actual).to.match(expected)
+    it('must not accept null values', function () {
+      expect(() => {
+        instance.setSupplierInfo({ id: null })
+      }).to.throw('Cannot provide null or undefined values to "setSupplierInfo". Please make sure you are passing valid data for both "domain" and "id", or simply exclude those which do not need to be updated.')
     })
 
     it('must convert non-string values to strings', function () {
@@ -235,11 +231,16 @@ function CommonTestSuite (factory) {
       expect(actual).to.match(expected)
     })
 
-    it('must convert missing values to empty strings', function () {
-      const expected = new RegExp('<Sender><Credential domain=""><Identity></Identity><SharedSecret></SharedSecret></Credential><UserAgent>.+</UserAgent></Sender>')
-      const actual = instance.setSenderInfo({}).toString()
+    it('must not accept undefined values', function () {
+      expect(() => {
+        instance.setSenderInfo({ domain: undefined })
+      }).to.throw('Cannot assign null or undefined values in "setSenderInfo". Please make sure you are passing valid data for "domain", "id", and "secret", or simply exclude those which do not need to be updated.')
+    })
 
-      expect(actual).to.match(expected)
+    it('must not accept null values', function () {
+      expect(() => {
+        instance.setSenderInfo({ id: null })
+      }).to.throw('Cannot assign null or undefined values in "setSenderInfo". Please make sure you are passing valid data for "domain", "id", and "secret", or simply exclude those which do not need to be updated.')
     })
 
     it('must convert non-string values to strings', function () {
@@ -254,16 +255,6 @@ function CommonTestSuite (factory) {
       const actual = instance
         .setSenderInfo({ domain: '%%SENDER_DOMAIN%%', id: '%%SENDER_IDENTITY%%', secret: '%%SECRET%%' })
         .setSenderInfo({ id: '%%SENDER_IDENTITY_2%%' })
-        .toString()
-
-      expect(actual).to.match(expected)
-    })
-
-    it('must reset parameter values if all null values are passed', function () {
-      const expected = new RegExp('<Sender><Credential domain=""><Identity></Identity><SharedSecret></SharedSecret></Credential><UserAgent>\\S+</UserAgent></Sender>')
-      const actual = instance
-        .setSenderInfo({ domain: '%%SENDER_DOMAIN%%', id: '%%SENDER_IDENTITY%%', secret: '%%SECRET%%', ua: '      ' })
-        .setSenderInfo({ domain: null, id: null, secret: null, ua: null })
         .toString()
 
       expect(actual).to.match(expected)
