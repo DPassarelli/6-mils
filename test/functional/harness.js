@@ -239,7 +239,7 @@ describe('end-to-end tests', function () {
       })
     })
 
-    context('with a timeout', function () {
+    context('with a refused connection', function () {
       /**
        * The data emitted by events (key -> event name, value -> data).
        * @type {Object}
@@ -254,15 +254,15 @@ describe('end-to-end tests', function () {
 
       /**
        * A value indicating whether the "submit" method returned a Promise that
-       * was resolved or rejected.
+       * was resolved or rejected (and if so, the error code).
        * @type {String}
        */
       let result = ''
 
       before(function () {
         /**
-         * In order to simulate a timeout, a request is made against an (assumed)
-         * unbound port.
+         * In order to simulate a refused connection, a request is made against
+         * an (assumed) unbound port.
          */
         const originalPortNumber = global.parseInt(/\d+$/.exec(server.baseUrl)[0])
         const newBaseUrl = server.baseUrl.replace(originalPortNumber, (originalPortNumber + 1).toString())
@@ -274,9 +274,9 @@ describe('end-to-end tests', function () {
           .setBuyerInfo({ domain: 'DUNS', id: '987654' })
           .setSupplierInfo({ domain: 'DUNS', id: '123456' })
           .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
-          .submit(`${newBaseUrl}/posr/timeout`)
+          .submit(`${newBaseUrl}/posr`)
           .then((response) => { result = 'resolved' })
-          .catch(() => { result = 'rejected' })
+          .catch((err) => { result = err.code })
       })
 
       describe('the outgoing request', function () {
@@ -293,8 +293,61 @@ describe('end-to-end tests', function () {
       })
 
       describe('the result', function () {
-        it('must be rejected', function () {
-          expect(result).to.equal('rejected')
+        it('must be rejected with the expected error', function () {
+          expect(result).to.equal('ECONNREFUSED')
+        })
+      })
+    })
+
+    context('with a timeout', function () {
+      /**
+       * The data emitted by events (key -> event name, value -> data).
+       * @type {Object}
+       */
+      const eventData = {}
+
+      /**
+       * The PunchOut setup request.
+       * @type {Object}
+       */
+      const posreq = new cxml.PunchOutSetupRequest({ timeout: 100 })
+
+      /**
+       * A value indicating whether the "submit" method returned a Promise that
+       * was resolved or rejected (and if so, the error code).
+       * @type {String}
+       */
+      let result = ''
+
+      before(function () {
+        posreq.once('sending', (data) => { eventData.sending = data })
+        posreq.once('received', (data) => { eventData.received = data })
+
+        return posreq
+          .setBuyerInfo({ domain: 'DUNS', id: '987654' })
+          .setSupplierInfo({ domain: 'DUNS', id: '123456' })
+          .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
+          .submit(`${server.baseUrl}/posr/timeout`)
+          .then((response) => { result = 'resolved' })
+          .catch((err) => { result = err.code })
+      })
+
+      describe('the outgoing request', function () {
+        it('must be published in the "sending" event', function () {
+          const expected = posreq.toString()
+          const actual = eventData.sending
+
+          expect(actual).to.equal(expected)
+        })
+
+        it('must not have emitted a "received" event', function () {
+          expect(eventData).to.not.have.property('received')
+        })
+      })
+
+      describe('the result', function () {
+        it('must be rejected with the expected error', function () {
+          expect(result).to.equal('ETIMEDOUT')
         })
       })
     })

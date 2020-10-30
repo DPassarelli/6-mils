@@ -74,6 +74,15 @@ class CxmlServer extends EventEmitter {
             res.end(POSR_FAILURE_CONTENT)
             break
 
+          case '/posr/timeout':
+            debug('replying with successful PunchOut Setup Response after 1000 ms delay')
+
+            global.setTimeout(() => {
+              res.setHeader('content-type', 'application/xml')
+              res.end(POSR_SUCCESS_CONTENT)
+            }, 1000)
+            break
+
           case '/order/success':
             debug('replying with successful Order Response')
             res.setHeader('content-type', 'application/xml')

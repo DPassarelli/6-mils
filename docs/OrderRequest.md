@@ -39,6 +39,7 @@ const orderReq = new cxml.OrderRequest({ orderId: 'ABC123' })
 | `orderDate` | {Date?\|String?} | The date and time that the order was placed. If specified as a string, it must be in [ISO 8601 format][8601]. If missing, the current date and time will be used by default. |
 | `orderId` | {String} | Required. The identifier for the order that this cXML message represents. This is typically the purchase order (PO) number. |
 | `payloadId` | {String?} | See below. |
+| `timeout` | {Number?} | If provided, this value will be used as the milliseconds to wait for the remote (supplier) server to respond before the request is aborted. The default setting is 30000 (30 seconds). Values that are less than 1, or not numeric, will be ignored. |
 
 **Notes for `payloadId`**
 

@@ -30,6 +30,7 @@ const posreq = new cxml.PunchOutSetupRequest()
 |-----|------|-------|
 | `payloadId` | {String?} | See below. |
 | `buyerCookie` | {String?} | If provided, this will be inserted into the `<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BuyerCookie>` element. If empty or missing, a unique value will be automatically generated. This value can be retrieved via the read-only `buyerCookie` property. |
+| `timeout` | {Number?} | If provided, this value will be used as the milliseconds to wait for the remote (supplier) server to respond before the request is aborted. The default setting is 30000 (30 seconds). Values that are less than 1, or not numeric, will be ignored. |
 
 **Notes for `payloadId`**
 
