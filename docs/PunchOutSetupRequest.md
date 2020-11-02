@@ -30,7 +30,6 @@ const posreq = new cxml.PunchOutSetupRequest()
 |-----|------|-------|
 | `payloadId` | {String?} | See below. |
 | `buyerCookie` | {String?} | If provided, this will be inserted into the `<cXML>` → `<Request>` → `<PunchOutSetupRequest>` → `<BuyerCookie>` element. If empty or missing, a unique value will be automatically generated. This value can be retrieved via the read-only `buyerCookie` property. |
-| `timeout` | {Number?} | If provided, this value will be used as the milliseconds to wait for the remote (supplier) server to respond before the request is aborted. The default setting is 30000 (30 seconds). Values that are less than 1, or not numeric, will be ignored. |
 
 **Notes for `payloadId`**
 
@@ -72,6 +71,11 @@ The unique identifier for this cXML message. Read-only.
 `<cXML>` (`payloadID` attribute)
 
 
+### `requestTimeout` {Number}
+
+The number of milliseconds to wait for a response to the outgoing cXML request. The default is 30000 (30 seconds). Read-write. This value must be a positive integer (greater than 0). Attempting to set this to any other kind of value will cause an error to be thrown.
+
+
 ### `timestamp` {String}
 
 The date and time of the cXML transmission, which will be in [ISO 8601 format](https://www.w3.org/TR/NOTE-datetime). Read-only.
@@ -85,7 +89,7 @@ The date and time of the cXML transmission, which will be in [ISO 8601 format](h
 
 ### `version` {String}
 
-The version of the cXML protocol used to generate the POSReq. This is specified in the referenced DTD. Read-only.
+The version of the cXML protocol used to generate the POSReq. This is specified by this library. Read-only.
 
 
 ## Methods

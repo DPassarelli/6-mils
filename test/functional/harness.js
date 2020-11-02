@@ -164,7 +164,7 @@ describe('end-to-end tests', function () {
        * The PunchOut setup request.
        * @type {Object}
        */
-      const posreq = new cxml.PunchOutSetupRequest()
+      let posreq = null
 
       /**
        * The response to the PunchOut setup request.
@@ -173,6 +173,8 @@ describe('end-to-end tests', function () {
       let posres = null
 
       before(function () {
+        posreq = new cxml.PunchOutSetupRequest()
+
         posreq.once('sending', (data) => { eventData.sending = data })
         posreq.once('received', (data) => { eventData.received = data })
 
@@ -250,7 +252,7 @@ describe('end-to-end tests', function () {
        * The PunchOut setup request.
        * @type {Object}
        */
-      const posreq = new cxml.PunchOutSetupRequest()
+      let posreq = null
 
       /**
        * A value indicating whether the "submit" method returned a Promise that
@@ -266,6 +268,8 @@ describe('end-to-end tests', function () {
          */
         const originalPortNumber = global.parseInt(/\d+$/.exec(server.baseUrl)[0])
         const newBaseUrl = server.baseUrl.replace(originalPortNumber, (originalPortNumber + 1).toString())
+
+        posreq = new cxml.PunchOutSetupRequest()
 
         posreq.once('sending', (data) => { eventData.sending = data })
         posreq.once('received', (data) => { eventData.received = data })
@@ -310,7 +314,7 @@ describe('end-to-end tests', function () {
        * The PunchOut setup request.
        * @type {Object}
        */
-      const posreq = new cxml.PunchOutSetupRequest({ timeout: 100 })
+      let posreq = null
 
       /**
        * A value indicating whether the "submit" method returned a Promise that
@@ -320,8 +324,12 @@ describe('end-to-end tests', function () {
       let result = ''
 
       before(function () {
+        posreq = new cxml.PunchOutSetupRequest()
+
         posreq.once('sending', (data) => { eventData.sending = data })
         posreq.once('received', (data) => { eventData.received = data })
+
+        posreq.requestTimeout = 100
 
         return posreq
           .setBuyerInfo({ domain: 'DUNS', id: '987654' })
@@ -363,7 +371,7 @@ describe('end-to-end tests', function () {
        * The PunchOut setup request.
        * @type {Object}
        */
-      const posreq = new cxml.PunchOutSetupRequest()
+      let posreq = null
 
       /**
        * A value indicating whether the "submit" method returned a Promise that
@@ -373,6 +381,8 @@ describe('end-to-end tests', function () {
       let result = ''
 
       before(function () {
+        posreq = new cxml.PunchOutSetupRequest()
+
         posreq.once('sending', (data) => { eventData.sending = data })
         posreq.once('received', (data) => { eventData.received = data })
 
@@ -574,10 +584,10 @@ describe('end-to-end tests', function () {
       const eventData = {}
 
       /**
-       * [orderRequest description]
+       * The sample order request.
        * @type {Object}
        */
-      const orderRequest = OrderRequestFactory()
+      let orderRequest = null
 
       /**
        * The response to the order request.
@@ -600,6 +610,8 @@ describe('end-to-end tests', function () {
       const PAYLOAD_ID = /^\d+\.\d+\.\w+@6-mils$/
 
       before(function () {
+        orderRequest = OrderRequestFactory()
+
         orderRequest.once('sending', (data) => { eventData.sending = data })
         orderRequest.once('received', (data) => { eventData.received = data })
 

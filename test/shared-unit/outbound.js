@@ -10,6 +10,40 @@
  * @return {undefined}
  */
 function CommonTestSuite (factory) {
+  describe('each instance', function () {
+    it('must have the expected properties', function () {
+      const expected = [
+        'payloadId',
+        'requestTimeout',
+        'timestamp',
+        'version'
+      ]
+
+      const instance = factory()
+
+      expected.forEach((name) => {
+        expect(instance).to.have.property(name)
+      })
+    })
+
+    it('must have the expected methods', function () {
+      const expected = [
+        'setBuyerInfo',
+        'setExtrinsic',
+        'setSupplierInfo',
+        'setSenderInfo',
+        'toString',
+        'submit'
+      ]
+
+      const instance = factory()
+
+      expected.forEach((name) => {
+        expect(instance).to.have.property(name)
+      })
+    })
+  })
+
   describe('the "payloadId" property', function () {
     /**
      * A regular expression that describes the default format for the
@@ -46,6 +80,64 @@ function CommonTestSuite (factory) {
       const actual = instance.payloadId
 
       expect(actual).to.match(PAYLOAD_ID)
+    })
+  })
+
+  describe('the "requestTimeout" property', function () {
+    let instance = null
+
+    beforeEach(function () {
+      instance = factory()
+    })
+
+    it('must return the correct default value', function () {
+      const expected = 30000
+      const actual = instance.requestTimeout
+
+      expect(actual).to.equal(expected)
+    })
+
+    it('must throw an error if set to something other than an integer', function () {
+      const nonIntegers = [
+        0.5,
+        new Date(),
+        [],
+        null
+      ]
+
+      nonIntegers.forEach((value) => {
+        expect(() => {
+          instance.requestTimeout = value
+        }).to.throw('The value for "requestTimeout" must be a positive integer.')
+      })
+    })
+
+    it('must throw an error if set to an integer less than 1', function () {
+      expect(() => {
+        instance.requestTimeout = 0
+      }).to.throw('The value for "requestTimeout" must be a positive integer.')
+    })
+
+    it('must return to the previous setting after an error is thrown', function () {
+      instance.requestTimeout = 1000
+
+      try {
+        instance.requestTimeout = -1
+      } catch (e) {
+        const expected = 1000
+        const actual = instance.requestTimeout
+
+        expect(actual).to.equal(expected)
+      }
+    })
+
+    it('must return the value it is set to (if valid)', function () {
+      const expected = 5000
+      instance.requestTimeout = expected
+
+      const actual = instance.requestTimeout
+
+      expect(actual).to.equal(expected)
     })
   })
 
