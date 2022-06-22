@@ -42,7 +42,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "fontoxpath": "^3.13.2",
-    "got": "^9.6.0",
+    "got": "^11.8.5",
     "is-plain-obj": "^2.1.0",
     "lodash.merge": "^4.6.2",
     "luxon": "^1.24.1",
