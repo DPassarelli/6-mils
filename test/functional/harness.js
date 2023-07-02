@@ -392,7 +392,7 @@ describe('end-to-end tests', function () {
           .setSenderInfo({ domain: 'NetworkId', id: 'example.com', secret: 'Open sesame!' })
           .submit(`${server.baseUrl}/posr/500`)
           .then((response) => { result = 'resolved' })
-          .catch(() => { result = 'rejected' })
+          .catch((err) => { result = err.message })
       })
 
       describe('the outgoing request', function () {
@@ -409,8 +409,8 @@ describe('end-to-end tests', function () {
       })
 
       describe('the result', function () {
-        it('must be rejected', function () {
-          expect(result).to.equal('rejected')
+        it('must be rejected with the expected error message', function () {
+          expect(result).to.equal('Response code 500 (Internal Server Error)')
         })
       })
     })
